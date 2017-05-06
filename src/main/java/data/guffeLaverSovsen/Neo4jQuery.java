@@ -11,12 +11,20 @@ import java.util.List;
  * Created by Uffe on 05-05-2017.
  */
 public class Neo4jQuery implements IQuery {
-    private final String URL = "bolt://localhost:7687";
-    private final String USER = "neo4j";
-    private final String PASSWORD = "class";
+    private String URL;
+    private String USER;
+    private String PASSWORD;
+    private Neo4jConnection connection;
+
+    public Neo4jQuery(String URL, String USER, String PASSWORD) {
+        this.URL = URL;
+        this.USER = USER;
+        this.PASSWORD = PASSWORD;
+        this.connection = new Neo4jConnection();
+    }
 
     public List<BookDTO> getBooksByAuthor(String author) {
-        Session session = getConnection();
+        Session session = connection.getConnection(URL, USER, PASSWORD);
         String query = "MATCH (a:Book) " +
                 " WHERE a.author = \""+ author +
                 "\" RETURN a.author AS author, a.title AS title, a.id AS id;";
@@ -35,10 +43,5 @@ public class Neo4jQuery implements IQuery {
         return resultList;
     }
 
-    private Session getConnection(){
-        Driver driver = GraphDatabase.driver(
-                URL,
-                AuthTokens.basic(USER, PASSWORD));
-        return driver.session();
-    }
+
 }
