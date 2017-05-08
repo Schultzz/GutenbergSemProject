@@ -1,0 +1,5 @@
+var bulk = db.books.initializeUnorderedBulkOp();
+bulk.insert( { bookId: "1000", title: "Best book", author: "Ernest Hemingway"} );
+bulk.insert( { bookId: "1010", title: "Good book", author: "Ernest Hemingway"} );
+bulk.insert( { bookId: "1020", title: "Another book", author: "Stephen King"} );
+bulk.execute();
