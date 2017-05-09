@@ -1,11 +1,7 @@
 package data.neo4j;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.v1.Session;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.test.TestGraphDatabaseFactory;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -14,19 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by Uffe on 06-05-2017.
  */
-public class Neo4jConnectionTEST {
-    protected static GraphDatabaseService graphDb;
-
-    @BeforeClass
-    public static void setup(){
-        graphDb = new TestGraphDatabaseFactory().newImpermanentDatabase();
-    }
-
-    @AfterClass
-    public static void tearDown()
-    {
-        graphDb.shutdown();
-    }
+public class Neo4jConnectionTest {
 
     @Test
     public void testValidNeo4jConnection() {

@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.*;
 /**
  * Created by Uffe on 05-05-2017.
  */
-public class Neo4jQueryTEST {
+public class Neo4jQueryTest {
 
     private static final String URL = "bolt://hobby-ilgiikaijildgbkefmcbhhpl.dbs.graphenedb.com:24786";
     private static final String USER = "test";
