@@ -1,4 +1,4 @@
-package data.guffeLaverSovsen;
+package data.neo4j;
 
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;

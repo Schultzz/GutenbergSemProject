@@ -1,4 +1,4 @@
-package data.guffeLaverSovsen;
+package data.neo4j;
 
 import data.IQuery;
 import data.dto.BookDTO;
@@ -40,6 +40,7 @@ public class Neo4jQuery implements IQuery {
             resultList.add(bk);
         }
         session.close();
+
         return resultList;
     }
 

@@ -2,10 +2,7 @@ package data.neo4j;
 
 import data.IQuery;
 import data.dto.BookDTO;
-import data.guffeLaverSovsen.Neo4jQuery;
-import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.v1.AuthTokens;
@@ -23,11 +20,16 @@ import static org.hamcrest.MatcherAssert.*;
  */
 public class Neo4jQueryTEST {
 
+    private static final String URL = "bolt://hobby-ilgiikaijildgbkefmcbhhpl.dbs.graphenedb.com:24786";
+    private static final String USER = "test";
+    private static final String PASSWORD = "b.nyjHUt6ivza6.yumM1PXk3jBRCLV4";
+
+
     @BeforeClass
     public static void setup() {
         Driver driver = GraphDatabase.driver(
-                "bolt://localhost:7687",
-                AuthTokens.basic("neo4j", "class"));
+                URL,
+                AuthTokens.basic(USER, PASSWORD));
         Session session = driver.session();
         String query1 = "CREATE INDEX ON :Book(author);";
         String query2 = "CREATE CONSTRAINT ON (b:Book) ASSERT b.id IS UNIQUE;";
@@ -51,7 +53,7 @@ public class Neo4jQueryTEST {
 
     @Test
     public void testValidNeo4jQuery() {
-        IQuery nq = new Neo4jQuery("bolt://localhost:7687", "neo4j", "class");
+        IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Villy Soevndal");
         assertThat(DTOBooks.size() > 0, is(true));
         for (BookDTO bk : DTOBooks) {
@@ -63,22 +65,17 @@ public class Neo4jQueryTEST {
 
     @Test
     public void testInvalidNeo4jQuery() {
-        IQuery nq = new Neo4jQuery("bolt://localhost:7687", "neo4j", "class");
+        IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Magnus Henriksen");
-        assertThat(DTOBooks.size() > 0, is(true));
-        for (BookDTO bk : DTOBooks) {
-            assertThat(bk.getAuthor(), is("Magnus Henriksen"));
-            assertThat(bk.getTitle(), notNullValue());
-            assertThat(bk.getId(), notNullValue());
-        }
+        assertThat(DTOBooks.size() == 0, is(true));
     }
 
 
     @AfterClass
     public static void teardown() {
         Driver driver = GraphDatabase.driver(
-                "bolt://localhost:7687",
-                AuthTokens.basic("neo4j", "class"));
+                URL,
+                AuthTokens.basic(USER, PASSWORD));
         Session session = driver.session();
         String query1 = "MATCH (n) DETACH DELETE n;";
         String query2 = "DROP INDEX ON :Book(author);";
