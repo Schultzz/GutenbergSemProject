@@ -1,6 +1,8 @@
 package data.mysql;
 
+import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -18,6 +20,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class MySqlConnectionTest {
 
+    private static DB db;
+
     private MySqlConnector mySqlConnector;
     private String expectedUrl = "jdbc:mysql://localhost/testdb?serverTimezone=UTC";
     private String expectedUsername = "root";
@@ -25,8 +29,7 @@ public class MySqlConnectionTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-
-        DB db = DB.newEmbeddedDB(3306);
+        db = DB.newEmbeddedDB(3306);
         db.start();
         db.source("MOCK_DATA.sql");
 
@@ -37,6 +40,11 @@ public class MySqlConnectionTest {
 
         mySqlConnector = new MySqlConnector(expectedUrl, expectedUsername, expectedPassword);
 
+    }
+
+    @AfterClass
+    public static void tearDown() throws ManagedProcessException {
+        db.stop();
     }
 
     @Test

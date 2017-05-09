@@ -1,7 +1,10 @@
 package data.mysql;
 
+import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 import data.dto.BookDTO;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -16,17 +19,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class MySqlQueryTest {
 
-    private static MySqlConnector mySqlConnector;
-    private static String url = "jdbc:mysql://localhost/testdb?serverTimezone=UTC";
-    private static String username = "root";
-    private static String password = "password";
+    private static DB db;
+
+    private MySqlConnector mySqlConnector;
+    private String url = "jdbc:mysql://localhost/testdb?serverTimezone=UTC";
+    private String username = "root";
+    private String password = "password";
 
     @BeforeClass
     public static void setUp() throws Exception {
-        DB db = DB.newEmbeddedDB(3306);
+        db = DB.newEmbeddedDB(3306);
         db.start();
         db.source("MOCK_DATA.sql");
+    }
+
+    @Before
+    public void setUpEach() {
+
         mySqlConnector = new MySqlConnector(url, username, password);
+
+    }
+
+    @AfterClass
+    public static void tearDown() throws ManagedProcessException {
+        db.stop();
     }
 
     @Test
@@ -54,8 +70,6 @@ public class MySqlQueryTest {
         //assert
         assertThat(books, nullValue());
     }
-
-
 
 
 }
