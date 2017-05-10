@@ -11,7 +11,7 @@ services:
 
 before_install:
   - mysql -e 'CREATE DATABASE gutenberg_test;'
-  - mysql -u root -p gutenberg_test < data.sql
+  - mysql -u root --password="" gutenberg_test < data.sql
 
 deploy:
   provider: script
@@ -19,3 +19,6 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+
+notifications:
+  email: false

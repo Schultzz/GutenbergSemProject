@@ -22,7 +22,7 @@ public class MySqlQueryTest {
     private static DB db;
 
     private MySqlConnector mySqlConnector;
-    private String url = "jdbc:mysql://localhost/testdb";
+    private String url = "jdbc:mysql://127.0.0.1/gutenberg_test";
     private String username = "root";
     private String password = "";
 
