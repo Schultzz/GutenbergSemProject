@@ -32,7 +32,7 @@ public class MySqlConnectionTest {
 //        db = DB.newEmbeddedDB(3306);
 //        db.start();
 //        db.source("MOCK_DATA.sql");
-
+        Class.forName("com.mysql.jdbc.Driver");
     }
 
     @Before
