@@ -6,6 +6,13 @@ cache:
   directories:
   - "$HOME/.cache"
 
+services:
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE gutenberg_test;'
+  - mysql -u root -p gutenberg_test < data.sql
+
 deploy:
   provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"

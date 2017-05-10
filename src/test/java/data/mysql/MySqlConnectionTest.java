@@ -23,15 +23,15 @@ public class MySqlConnectionTest {
     private static DB db;
 
     private MySqlConnector mySqlConnector;
-    private String expectedUrl = "jdbc:mysql://localhost/testdb?serverTimezone=UTC";
+    private String expectedUrl = "jdbc:mysql://localhost/testdb";
     private String expectedUsername = "root";
-    private String expectedPassword = "password";
+    private String expectedPassword = "";
 
     @BeforeClass
     public static void setUp() throws Exception {
-        db = DB.newEmbeddedDB(3306);
-        db.start();
-        db.source("MOCK_DATA.sql");
+//        db = DB.newEmbeddedDB(3306);
+//        db.start();
+//        db.source("MOCK_DATA.sql");
 
     }
 

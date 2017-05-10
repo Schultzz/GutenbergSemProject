@@ -22,15 +22,15 @@ public class MySqlQueryTest {
     private static DB db;
 
     private MySqlConnector mySqlConnector;
-    private String url = "jdbc:mysql://localhost/testdb?serverTimezone=UTC";
+    private String url = "jdbc:mysql://localhost/testdb";
     private String username = "root";
-    private String password = "password";
+    private String password = "";
 
     @BeforeClass
     public static void setUp() throws Exception {
-        db = DB.newEmbeddedDB(3306);
-        db.start();
-        db.source("MOCK_DATA.sql");
+//        db = DB.newEmbeddedDB(3306);
+//        db.start();
+//        db.source("MOCK_DATA.sql");
     }
 
     @Before
