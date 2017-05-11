@@ -3,7 +3,8 @@ language: java
 jdk:
   - oraclejdk8
 services:
-  - docker
+  - mysql
+  - mongodb
 cache:
   directories:
   - "$HOME/.cache"
@@ -15,9 +16,14 @@ before_install:
   - echo "browser.remote_content_hostname_whitelist=*" >> neo4j-community-3.2.0/conf/neo4j.conf
   - sudo neo4j-community-3.2.0/bin/neo4j restart
   - sudo neo4j-community-3.2.0/bin/neo4j-admin set-initial-password test
+  - mysql -e 'CREATE DATABASE gutenberg_test;'
+  - mysql -u root --password='' gutenberg_test < data.sql
+  - mongo testDB --eval 'db.addUser("user", "password");'
 deploy:
   provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
   skip_cleanup: true
   on:
     tags: true
+  notifications:
+    email: false
