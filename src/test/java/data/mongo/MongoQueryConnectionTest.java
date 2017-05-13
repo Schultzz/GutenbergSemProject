@@ -6,13 +6,6 @@ package data.mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by Flashed on 05-05-2017.
  */
+@Ignore
 public class MongoQueryConnectionTest {
 
     private static MongoConnection mongoConnection;
@@ -52,12 +46,6 @@ public class MongoQueryConnectionTest {
         connectionString = "mongodb://localhost";
         collectionName = "testCollection";
 
-        //Setup actual in-memory DB
-        MongodStarter starter = MongodStarter.getDefaultInstance();
-        port = Network.getFreeServerPort();
-        MongodExecutable _mongodExe = starter.prepare(createMongodConfig());
-        _mongodExe.start();
-
         //Test setup
         mongoConnection = new MongoConnection(connectionString, port+"", user, password);
         mongoClient = mongoConnection.getConnection(connectionString, port+"", user, password);
@@ -70,15 +58,7 @@ public class MongoQueryConnectionTest {
 
     }
 
-    private static IMongodConfig createMongodConfig() throws IOException {
-        return createMongodConfigBuilder().build();
-    }
 
-    private static MongodConfigBuilder createMongodConfigBuilder() throws IOException {
-        return new MongodConfigBuilder()
-                .version(Version.Main.PRODUCTION)
-                .net(new Net(port, Network.localhostIsIPv6()));
-    }
 
 
     @Test

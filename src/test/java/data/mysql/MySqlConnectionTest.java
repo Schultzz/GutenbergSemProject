@@ -17,7 +17,7 @@ public class MySqlConnectionTest {
 
     private static MySqlConnector mySqlConnector;
     private static String expectedUrl = "jdbc:mysql://127.0.0.1/gutenberg_test";
-    private static String expectedUsername = "root";
+    private static String expectedUsername = "tester";
     private static String expectedPassword = "pwd";
 
 
