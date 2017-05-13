@@ -1,14 +1,31 @@
-sudo: false
+sudo: required
 language: java
-services:
-- docker
+jdk:
+  - oraclejdk8
 cache:
   directories:
   - "$HOME/.cache"
-
+services:
+  - mysql
+  - mongodb
+before_install:
+  - wget https://neo4j.com/artifact.php?name=neo4j-community-3.2.0-unix.tar.gz
+  - tar -xzf artifact.php\?name\=neo4j-community-3.2.0-unix.tar.gz
+  - sudo chmod a+w neo4j-community-3.2.0/conf/neo4j.conf
+  - echo "dbms.connectors.default_listen_address=0.0.0.0" >> neo4j-community-3.2.0/conf/neo4j.conf
+  - echo "browser.remote_content_hostname_whitelist=*" >> neo4j-community-3.2.0/conf/neo4j.conf
+  - sudo neo4j-community-3.2.0/bin/neo4j restart
+  - sudo neo4j-community-3.2.0/bin/neo4j-admin set-initial-password test
+  - mysql -e 'CREATE DATABASE gutenberg_test;'
+  - mysql -u root --password='' -e "create user 'tester'@'127.0.0.1' identified by 'pwd'; grant all privileges on *.* to 'tester'@'127.0.0.1' with grant option; flush privileges;"
+  - mongo testDB --eval 'db.addUser("user", "password");'
 deploy:
   provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
   skip_cleanup: true
   on:
     tags: true
+notifications:
+  email: false
+
+
