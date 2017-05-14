@@ -20,9 +20,9 @@ import static org.hamcrest.MatcherAssert.*;
  */
 public class Neo4jQueryTest {
 
-    private static final String URL = "bolt://hobby-ilgiikaijildgbkefmcbhhpl.dbs.graphenedb.com:24786";
-    private static final String USER = "test";
-    private static final String PASSWORD = "b.nyjHUt6ivza6.yumM1PXk3jBRCLV4";
+    private static final String URL = "bolt://localhost";
+    private static final String USER = "neo4j";
+    private static final String PASSWORD = "test";
 
 
     @BeforeClass

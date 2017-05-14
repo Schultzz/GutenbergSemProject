@@ -5,13 +5,14 @@ import com.mongodb.client.MongoCursor;
 import data.dto.BookDTO;
 import org.bson.Document;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import refactormepleasehansen.MongoQuery;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,11 +22,11 @@ import static org.hamcrest.Matchers.hasSize;
 /**
  * Created by Flashed on 07-05-2017.
  */
-@Ignore
+
 public class MongoQueryTest {
 
     private static MongoQuery mongoQuery;
-    private static int port;
+    private static int port = 27017;
     private static String databaseName;
     private static String user;
     private static String password;
@@ -34,6 +35,9 @@ public class MongoQueryTest {
 
     @BeforeClass
     public static void setup() throws IOException {
+
+        Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
+        mongoLogger.setLevel(Level.SEVERE); // e.g. or Log.WARNING, etc.
         //Setup variables
         databaseName = "testDB";
         user = "user";
@@ -42,6 +46,7 @@ public class MongoQueryTest {
         bookCollectionName = "books";
 
         MongoClient _mongoClient = new MongoClient("localhost");
+        _mongoClient.getDatabase(databaseName).drop(); //TODO: refactor or whatever. Needed or an exception for collection already exist is thrown.
         _mongoClient.getDatabase(databaseName).createCollection(bookCollectionName);
 
         //Test setup
