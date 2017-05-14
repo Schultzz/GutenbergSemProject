@@ -20,6 +20,7 @@ before_install:
   - mysql -u root --password='' gutenberg_test < scripts/setup.sql
   - mysql -u root --password='' -e "create user 'tester'@'127.0.0.1' identified by 'pwd'; grant all privileges on *.* to 'tester'@'127.0.0.1' with grant option; flush privileges;"
   - mongo testDB --eval 'db.addUser("user", "password");'
+script: mvn clean verify
 deploy:
   provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
