@@ -20,33 +20,18 @@ public class MySqlConnectionTest {
     private static String expectedUsername = "tester";
     private static String expectedPassword = "pwd";
 
-
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @Before
+    public void setUpEach() throws SQLException, DatabaseUnitException, FileNotFoundException {
         mySqlConnector = new MySqlConnector(expectedUrl, expectedUsername, expectedPassword);
     }
 
-    @Before
-    public void setUpEach() throws SQLException, DatabaseUnitException, FileNotFoundException {
-
-    }
-
     @After
-    public void tearDownEach() {
-
-    }
-
-    @AfterClass
-    public static void tearDown() {
-
+    public void tearDownEach() throws SQLException {
+        mySqlConnector.close();
     }
 
     @Test
     public void constructorShouldSetProperties() throws SQLException {
-        //arrange
-
-        //act
-
         //assert
         assertThat(mySqlConnector.getUrl(), is(expectedUrl));
         assertThat(mySqlConnector.getUsername(), is(expectedUsername));
@@ -55,9 +40,6 @@ public class MySqlConnectionTest {
 
     @Test
     public void returnValidDatabaseConnection() throws SQLException {
-        //arrange
-        MySqlConnector mySqlConnector = new MySqlConnector(expectedUrl, expectedUsername, expectedPassword);
-
         //act
         mySqlConnector.open();
         Connection connection = mySqlConnector.getConnection();
@@ -69,19 +51,15 @@ public class MySqlConnectionTest {
     @Test(expected = Exception.class)
     public void throwExceptionInvalidDatabaseConnection() throws SQLException {
         //arrange
-        MySqlConnector mySqlConnector = new MySqlConnector("invalid", expectedUsername, expectedPassword);
+        MySqlConnector invalidMySqlConnector = new MySqlConnector("invalid", expectedUsername, expectedPassword);
 
         //act
-        mySqlConnector.open();
+        invalidMySqlConnector.open();
 
     }
 
     @Test
     public void validateConnectionGetClosed() throws SQLException {
-
-        //arrange
-        MySqlConnector mySqlConnector = new MySqlConnector(expectedUrl, expectedUsername, expectedPassword);
-
         //act
         mySqlConnector.open();
         mySqlConnector.close();
@@ -93,9 +71,3 @@ public class MySqlConnectionTest {
     }
 
 }
-
-//arrange
-
-//act
-
-//assert

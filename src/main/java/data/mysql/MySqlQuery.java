@@ -21,7 +21,7 @@ public class MySqlQuery implements IQuery {
     }
 
     public List<BookDTO> getBooksByAuthor(String author) {
-        List<BookDTO> booklist = null;
+        ArrayList booklist = null;
 
         try {
             String sql = "SELECT * FROM books WHERE author = ?";

@@ -31,38 +31,35 @@ public class MySqlQueryTest {
 
 
     private static MySqlConnector mySqlConnector;
-    private static String expectedUrl = "jdbc:mysql://127.0.0.1/gutenberg_test";
-    private static String expectedUsername = "tester";
-    private static String expectedPassword = "pwd";
-    private Connection connection;
-
-    private IDataSet xmlDataSet;
-    private IDatabaseConnection dbConnection;
+    private MySqlQuery query;
 
 
     @BeforeClass
     public static void setUp() throws Exception {
+        String expectedUrl = "jdbc:mysql://127.0.0.1/gutenberg_test";
+        String expectedUsername = "tester";
+        String expectedPassword = "pwd";
         mySqlConnector = new MySqlConnector(expectedUrl, expectedUsername, expectedPassword);
     }
 
     @Before
     public void setUpEach() throws SQLException, DatabaseUnitException, FileNotFoundException {
         mySqlConnector.open();
-        connection = mySqlConnector.getConnection();
-        dbConnection = new DatabaseConnection(connection, "gutenberg_test");
+        Connection connection = mySqlConnector.getConnection();
+        IDatabaseConnection dbConnection = new DatabaseConnection(connection, "gutenberg_test");
         dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, new MySqlMetadataHandler());
-        xmlDataSet = new FlatXmlDataSetBuilder().build(new FileInputStream("scripts/mysqldataset.xml"));
+        IDataSet xmlDataSet = new FlatXmlDataSetBuilder().build(new FileInputStream("scripts/mysqldataset.xml"));
         DatabaseOperation.CLEAN_INSERT.execute(dbConnection, xmlDataSet);
         mySqlConnector.close();
+
+        //arrange
+        query = new MySqlQuery(mySqlConnector);
     }
 
 
 
     @Test
     public void getValidBooksValidAuthor() {
-        //arrange
-        MySqlQuery query = new MySqlQuery(mySqlConnector);
-
         //act
         List<BookDTO> books = query.getBooksByAuthor("Gery Errigo");
 
@@ -75,9 +72,6 @@ public class MySqlQueryTest {
 
     @Test
     public void returnNullWhenAuthorNotExist() {
-        //arrange
-        MySqlQuery query = new MySqlQuery(mySqlConnector);
-
         //act
         List<BookDTO> books = query.getBooksByAuthor("I don't exist");
 
