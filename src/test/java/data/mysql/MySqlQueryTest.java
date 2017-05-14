@@ -47,7 +47,6 @@ public class MySqlQueryTest {
 
     @Before
     public void setUpEach() throws SQLException, DatabaseUnitException, FileNotFoundException {
-
         mySqlConnector.open();
         connection = mySqlConnector.getConnection();
         dbConnection = new DatabaseConnection(connection, "gutenberg_test");

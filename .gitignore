@@ -11,3 +11,7 @@
 # Maven
 log/
 target/
+
+# Vagrant
+vm/*.log
+vm/.vagrant/
