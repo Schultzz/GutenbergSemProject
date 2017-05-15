@@ -15,7 +15,7 @@ public class Neo4jConnectionTest {
     @Test
     public void testValidNeo4jConnection() {
         Neo4jConnection con = new Neo4jConnection();
-        Session session = con.getConnection("bolt://127.0.0.1:7687", "neo4j", "test");
+        Session session = con.getConnection("bolt://localhost", "neo4j", "test");
         assertThat(session, is(notNullValue()));
         session.close();
     }

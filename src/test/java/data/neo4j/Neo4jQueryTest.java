@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.*;
  */
 public class Neo4jQueryTest {
 
-    private static final String URL = "bolt://127.0.0.1:7687";
+    private static final String URL = "bolt://localhost";
     private static final String USER = "neo4j";
     private static final String PASSWORD = "test";
 
