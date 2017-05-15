@@ -2,6 +2,7 @@ package data.mysql;
 
 import data.IQuery;
 import data.dto.BookDTO;
+import data.dto.CityDTO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,5 +49,17 @@ public class MySqlQuery implements IQuery {
         }
 
         return booklist;
+    }
+
+    public List<BookDTO> getBooksByCity(String city) {
+        return null;
+    }
+
+    public List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance) {
+        return null;
+    }
+
+    public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
+        return null;
     }
 }

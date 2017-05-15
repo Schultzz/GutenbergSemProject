@@ -2,6 +2,7 @@ package data.neo4j;
 
 import data.IQuery;
 import data.dto.BookDTO;
+import data.dto.CityDTO;
 import org.neo4j.driver.v1.*;
 
 import java.util.ArrayList;
@@ -42,6 +43,18 @@ public class Neo4jQuery implements IQuery {
         session.close();
 
         return resultList;
+    }
+
+    public List<BookDTO> getBooksByCity(String city) {
+        return null;
+    }
+
+    public List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance) {
+        return null;
+    }
+
+    public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
+        return null;
     }
 
 
