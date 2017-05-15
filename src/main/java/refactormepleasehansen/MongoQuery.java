@@ -7,6 +7,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import data.IQuery;
 import data.dto.BookDTO;
+import data.dto.CityDTO;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -48,6 +49,18 @@ public class MongoQuery implements IQuery {
         }
 
         return books;
+    }
+
+    public List<BookDTO> getBooksByCity(String city) {
+        return null;
+    }
+
+    public List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance) {
+        return null;
+    }
+
+    public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
+        return null;
     }
 
     public MongoCursor<Document> queryBooksByAuthor(String author, String collectionName){
