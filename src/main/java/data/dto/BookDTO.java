@@ -24,6 +24,10 @@ public class BookDTO {
         return cities;
     }
 
+    public void setCities(List<CityDTO> cities) {
+        this.cities = cities;
+    }
+
     public void addCity(CityDTO city){
         this.cities.add(city);
     }
