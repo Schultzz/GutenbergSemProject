@@ -6,10 +6,10 @@ package data.dto;
 public class CityDTO {
 
     private String cityName;
-    private float longtitude;
-    private float latitude;
+    private double longtitude;
+    private double latitude;
 
-    public CityDTO(String cityName, float longtitude, float latitude) {
+    public CityDTO(String cityName, double longtitude, double latitude) {
         this.cityName = cityName;
         this.longtitude = longtitude;
         this.latitude = latitude;
@@ -23,19 +23,19 @@ public class CityDTO {
         this.cityName = cityName;
     }
 
-    public float getLongtitude() {
+    public double getLongtitude() {
         return longtitude;
     }
 
-    public void setLongtitude(float longtitude) {
+    public void setLongtitude(double longtitude) {
         this.longtitude = longtitude;
     }
 
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 }
