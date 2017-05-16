@@ -1,12 +1,12 @@
 package logic.bookscanner;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -55,9 +55,23 @@ public class ScannedBookTest {
         scannedBook.addAuthor("Magnus");
         scannedBook.addMatchedCity("Hellerup");
         String csvString = scannedBook.asCsvString();
-        String espekted = "\"testTitle\",\"Magnus\",\"Hellerup\"\n";
+        String expectedString = "\"testTitle\",\"Magnus\",\"Hellerup\"\n";
 
-        assertThat(csvString, is(espekted));
+        assertThat(csvString, is(expectedString));
     }
+
+    @Test
+    public void getCSVStringWithMultipleValuesTest(){
+        scannedBook.setTitle("testTitle");
+        scannedBook.addAuthor("Magnus");
+        scannedBook.addAuthor("Klavs");
+        scannedBook.addMatchedCity("Hellerup");
+        scannedBook.addMatchedCity("Rungsted");
+        String csvString = scannedBook.asCsvString();
+        String expectedString = "\"testTitle\",\"Magnus,Klavs\",\"Hellerup,Rungsted\"\n";
+
+        assertThat(csvString, is(expectedString));
+    }
+
 
 }

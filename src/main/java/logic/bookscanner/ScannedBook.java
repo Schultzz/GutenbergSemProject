@@ -10,38 +10,52 @@ public class ScannedBook {
     private HashSet<String> wordsFromBook;
     private HashSet<String> matchedCities;
     private HashSet<String> authors;
-    
-    public ScannedBook(HashSet<String> wordsFromBook){
+
+    public ScannedBook(HashSet<String> wordsFromBook) {
         this.wordsFromBook = wordsFromBook;
         matchedCities = new HashSet<String>();
         authors = new HashSet<String>();
     }
+
     public String asCsvString() {
-        return null;
+
+        String csvString = "\"" + title.trim() + "\",\"";
+
+        for (String city : this.authors) {
+            csvString += city + ",";
+        }
+        csvString = csvString.trim();
+        csvString = csvString.substring(0, csvString.length() - 1) + "\",\"";
+
+        for (String city : this.matchedCities) {
+            csvString += city.trim() + ",";
+        }
+        csvString = csvString.trim();
+        csvString = csvString.substring(0, csvString.length() - 1) + "\"\n";
+
+        return csvString;
+
     }
 
     public void setTitle(String title) {
         if (title.contains("\n")) {
             this.title = title.substring(0, title.indexOf("\n"));
-        }
-        else{
+        } else {
             this.title = title;
         }
     }
 
     public void addAuthor(String author) {
         String[] names = author.split(",");
-        if (names.length > 1){
+        if (names.length > 1) {
             String fullName = names[1].substring(1) + " " + names[0];
             this.authors.add(fullName);
-        }
-        else{
+        } else {
             this.authors.add(author);
         }
     }
-    
 
-    
+
     public String getTitle() {
         return title;
     }
@@ -54,7 +68,9 @@ public class ScannedBook {
         return authors;
     }
 
-    public void addMatchedCity(String str) {
-        matchedCities.add(str);
+    public void addMatchedCity(String city) {
+        matchedCities.add(city);
     }
+
+    public HashSet<String> getMatchedCities() { return matchedCities; }
 }
