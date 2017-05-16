@@ -47,9 +47,9 @@ public class BookScanner {
 
 
     public ScannedBook setMetaDataOnBook(ScannedBook book, String filename) throws IOException {
-        String file = filename.substring(19);
-        String path = filename.substring(0,19);
-        String fileString = path + "pg" + file;
+        String[] fileArray = filename.split("/");
+        String file = fileArray[fileArray.length-1];
+        String fileString = filename.replace(file, "pg"+file);
         fileString = fileString.replace(".txt", ".rdf");
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
