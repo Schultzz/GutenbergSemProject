@@ -31,7 +31,7 @@ public interface IQuery {
      * @param distance radius of the search distance
      * @return list of BookDTO's
      */
-    List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance);
+    List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance);
 
     /**
      * Given a booktitle, the method returns a list of cities mentioned in the book

@@ -49,7 +49,7 @@ public class Neo4jQuery implements IQuery {
         return null;
     }
 
-    public List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance) {
+    public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
         return null;
     }
 
