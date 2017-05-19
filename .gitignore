@@ -15,3 +15,8 @@ target/
 # Vagrant
 vm/*.log
 vm/.vagrant/
+
+# Bookscanner
+src/main/resources/bookscanner/books/
+src/main/resources/bookscanner/cache/
+src/main/resources/bookscanner/csv/

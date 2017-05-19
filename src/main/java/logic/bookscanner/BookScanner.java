@@ -1,5 +1,7 @@
 package logic.bookscanner;
 
+import logic.entities.Author;
+import logic.entities.Book;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -12,8 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,13 +23,66 @@ import java.util.regex.Pattern;
  */
 public class BookScanner {
 
-    public String getBookAsString(String fileName) throws FileNotFoundException {
+    private ArrayList<Author> authors;
+    private ArrayList<Book> books;
+    private Map<String, Author> authorMap;
 
-        String bookAsString;
+    public BookScanner() {
+        this.authors = new ArrayList<Author>();
+        this.books = new ArrayList<Book>();
+        authorMap = new HashMap();
+    }
 
-        bookAsString = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
+    public Book setMetaDataOnBook(Book book, String filename) throws IOException {
 
-        return bookAsString;
+        String[] fileArray = filename.split("/");
+        String file = fileArray[fileArray.length - 1];
+        String bookname = file.replace(".txt", "");
+        String tempFilename = "/home/ms/Hentet/cache/epub/" + bookname + "/" + file;
+        String fileString = tempFilename.replace(file, "pg" + file);
+        fileString = fileString.replace(".txt", ".rdf");
+
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        try {
+            builder = factory.newDocumentBuilder();
+
+            Document document = builder.parse(new File(fileString));
+
+            NodeList nList = document.getElementsByTagName("pgterms:name");
+            NodeList authorIDList = document.getElementsByTagName("pgterms:agent");
+            Node tempNode;
+            Node tempNode2;
+            for (int i = 0; i < nList.getLength(); i++) {
+                tempNode = nList.item(i);
+                tempNode2 = authorIDList.item(i);
+                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) tempNode;
+                    Element element2 = (Element) tempNode2;
+                    String[] authorIDs = element2.getAttribute("rdf:about").split("/");
+                    String authorID = authorIDs[authorIDs.length - 1];
+                    Author author = new Author(authorID, element.getFirstChild().getNodeValue());
+                    addAuthorToMap(authorID, author);
+                    book.addAuthor(author);
+                    book.setId(bookname);
+                }
+            }
+
+            nList = document.getElementsByTagName("dcterms:title");
+            if (nList.getLength() > 0) {
+                tempNode = nList.item(0);
+                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) tempNode;
+                    book.setTitle(element.getFirstChild().getNodeValue());
+                }
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        return book;
     }
 
     public HashSet<String> getCapitalizedWords(String bookAsString) {
@@ -45,42 +99,23 @@ public class BookScanner {
         return matches;
     }
 
+    public String getBookAsString(String fileName) throws FileNotFoundException {
 
-    public ScannedBook setMetaDataOnBook(ScannedBook book, String filename) throws IOException {
-        String[] fileArray = filename.split("/");
-        String file = fileArray[fileArray.length-1];
-        String fileString = filename.replace(file, "pg"+file);
-        fileString = fileString.replace(".txt", ".rdf");
+        String bookAsString;
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
-        try {
-            builder = factory.newDocumentBuilder();
+        bookAsString = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
 
-            Document document = builder.parse(new File(fileString));
-
-            NodeList nList = document.getElementsByTagName("pgterms:name");
-            Node tempNode;
-            for (int i = 0; i < nList.getLength(); i++) {
-                tempNode = nList.item(i);
-                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) tempNode;
-                    book.addAuthor(element.getFirstChild().getNodeValue());
-                }
-            }
-            nList = document.getElementsByTagName("dcterms:title");
-            if (nList.getLength() > 0) {
-                tempNode = nList.item(0);
-                if (tempNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) tempNode;
-                    book.setTitle(element.getFirstChild().getNodeValue());
-                }
-            }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-        return book;
+        return bookAsString;
     }
+
+    private void addAuthorToMap(String authorID, Author author) {
+        if (!authorMap.containsKey(authorID)) {
+            authorMap.put(authorID, author);
+        }
+    }
+
+    public Map<String, Author> getAuthorMap() {
+        return authorMap;
+    }
+
 }
