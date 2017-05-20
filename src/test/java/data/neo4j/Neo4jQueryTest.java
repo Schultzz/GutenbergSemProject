@@ -4,6 +4,7 @@ import data.IQuery;
 import data.dto.BookDTO;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
@@ -51,6 +52,7 @@ public class Neo4jQueryTest {
         driver.close();
     }
 
+    @Ignore
     @Test
     public void testValidNeo4jQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
