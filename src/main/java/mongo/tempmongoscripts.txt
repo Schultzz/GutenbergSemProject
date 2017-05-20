@@ -1,0 +1,27 @@
+db.var bulk = db.books.initializeUnorderedBulkOp();
+bulk.insert( { bookId: "1000", title: "Best book", author: "Ernest Hemingway"} );
+bulk.insert( { bookId: "1010", title: "Good book", author: "Ernest Hemingway"} );
+bulk.insert( { bookId: "1020", title: "Another book", author: "Stephen King"} );
+bulk.execute();
+
+db.cities.find({name : {$in: ["Copenhagen"]}})
+db.books.find({cities : {$in: ["London"]}})
+db.cities.find({location:{$near: {$geometry: {type: "Point", coordinates[-73.9667, 40.78]},$maxDistance: 5000}}})
+
+db.cities.find({ location:{ $geoWithin:{ $centerSphere: [ [ 12.568337, 55.676098 ], 5 / 3963.2 ] } } })
+
+db.books.find().forEach(function(elemBook){
+    elemBook.cities.forEach(function(elemCity){
+    var city = db.cities.findOne({name : elemCity});
+    elemCity = {name : elemCity, location: city.location};
+    });
+    print(elemBook.cities);
+    });
+
+db.books.find().forEach(function(elemBook){
+    elemBook.cities.forEach(function(elemCity){
+    var city = db.cities.findOne({name : elemCity});
+    elemCity = {name : elemCity, location: city.location};
+    })
+    db.books.save(elemBook);
+});

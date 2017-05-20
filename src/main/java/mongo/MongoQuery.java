@@ -1,4 +1,4 @@
-package refactormepleasehansen;
+package mongo;
 
 
 import com.mongodb.*;
@@ -11,7 +11,6 @@ import data.dto.CityDTO;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import javax.print.Doc;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +45,56 @@ public class MongoQuery implements IQuery {
         return books;
     }
 
-    public List<BookDTO> getBooksByGeoLocation(float lon, float lat, float distance) {
-        return null;
+    public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
+        List<BookDTO> books = null;
+        String bookCollection = "books";
+        String cityCollection = "cities";
+        List<String> cities = queryCitiesByGeoLocation(lon, lat, distance, cityCollection);
+        if(cities!=null){
+            books = queryBooksByCities(cities, bookCollection);
+        }
+        return books;
     }
 
     public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
-        return null;
+        String collectionName = "books";
+        List<CityDTO> cities = queryCitiesByBookTitle(bookTitle, collectionName);
+        return cities;
     }
 
+    public List<BookDTO> queryBooksByCities(List<String> cities, String collectionName){
+        //This method is almost identical to the method that queries on a single city, but time is running out.
+        BasicDBList cityNames = new BasicDBList();
+        cityNames.addAll(cities);
+        DBObject inClause = new BasicDBObject("$in", cityNames);
+        DBObject query = BasicDBObjectBuilder.start().add("cities", inClause).get();
+        MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
+        MongoCursor<Document> cursor = collection.find((Bson) query).iterator(); //This could be mocked
+
+        List<BookDTO> books = mongoCursorToBookDTOList(cursor);
+        return books;
+    }
+
+    public List<String> queryCitiesByGeoLocation(double lon, double lat, double distance, String collectionName){
+        BasicDBList geoCoord = new BasicDBList();
+        geoCoord.add(lon);
+        geoCoord.add(lat);
+
+        BasicDBList geoParams = new BasicDBList();
+        geoParams.add(geoCoord);
+        geoParams.add(distance);
+
+        BasicDBObject query = new BasicDBObject("location",
+                new BasicDBObject("$geoWithin",
+                        new BasicDBObject("$center", geoParams)));
+
+        MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
+        MongoCursor<Document> cursor = collection.find((Bson) query).iterator();
+
+        List<String> cities = mongoCursorToCityStringList(cursor);
+
+        return cities;
+    }
 
     public List<BookDTO> queryBooksByAuthor(String author, String collectionName){
 
@@ -90,6 +131,35 @@ public class MongoQuery implements IQuery {
 
 
         return cityDTOs;
+    }
+
+    public List<CityDTO> queryCitiesByBookTitle(String bookTitle, String collectionName){
+
+        List<BookDTO> booksDTO = null;
+        List<CityDTO> citiesDTO = null;
+        DBObject query = BasicDBObjectBuilder.start().add("title", bookTitle).get();
+        MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
+        MongoCursor<Document> cursor = collection.find((Bson) query).iterator();
+        booksDTO = mongoCursorToBookDTOList(cursor);
+
+        if(booksDTO.size()==1){
+            citiesDTO = booksDTO.get(0).getCities();
+        }
+
+        return citiesDTO;
+    }
+
+    public List<String> mongoCursorToCityStringList(MongoCursor<Document> cursor){
+        List<String> cities = new ArrayList<String>();
+
+        while(cursor.hasNext()){
+            Document doc = cursor.next();
+            if(doc.containsKey("name")){
+                cities.add(doc.getString("name"));
+            }
+        }
+
+        return cities;
     }
 
     //UNTESTED, CRIME CRIME CRIME. Not sure how to create the mongocursor in the test.

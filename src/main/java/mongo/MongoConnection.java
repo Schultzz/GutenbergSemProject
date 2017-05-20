@@ -1,4 +1,4 @@
-package refactormepleasehansen;
+package mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;

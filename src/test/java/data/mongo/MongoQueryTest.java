@@ -1,17 +1,13 @@
 package data.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCursor;
 import data.dto.BookDTO;
 import data.dto.CityDTO;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import refactormepleasehansen.MongoQuery;
+import mongo.MongoQuery;
 
-import javax.print.Doc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,7 +140,7 @@ public class MongoQueryTest {
 
     @Test
     public void queryBooksByCityTest(){
-        List<BookDTO> books = mongoQuery.queryBooksByCity("London", "books");
+        List<BookDTO> books = mongoQuery.queryBooksByCity("London", bookCollectionName);
         assertThat(books, hasSize(2));
     }
 
@@ -153,5 +149,39 @@ public class MongoQueryTest {
         List<String> cities = Arrays.asList("London", "Copenhagen");
         List<CityDTO> cityDTOs = mongoQuery.queryCitiesByList(cities, cityCollectionName);
         assertThat(cityDTOs, hasSize(cities.size()));
+    }
+
+    @Test
+    public void getCitiesByBookTitleTest(){
+        String bookTitle = "Best book";
+        List<CityDTO> cities = mongoQuery.getCitiesByBookTitle(bookTitle);
+        assertThat(cities, hasSize(2));
+    }
+
+    @Test
+    public void queryCitiesByBookTitleTest(){
+        String bookTitle = "Best book";
+        List<CityDTO> cities = mongoQuery.queryCitiesByBookTitle(bookTitle, bookCollectionName);
+        assertThat(cities, hasSize(2));
+    }
+
+    @Test
+    public void queryCitiesByGeoLocation(){
+        double lng = 12.56569;
+        double lat = 55.67572;
+        double distance = 5;
+        List<String> cityStrings = mongoQuery.queryCitiesByGeoLocation(lng, lat, distance, cityCollectionName);
+        assertThat(cityStrings, hasSize(1));
+        assertThat(cityStrings.get(0), is("Copenhagen"));
+    }
+
+    @Test
+    public void getBooksByGeoLocation(){
+        double lng = 12.56569;
+        double lat = 55.67572;
+        double distance = 5;
+        List<BookDTO> books = mongoQuery.getBooksByGeoLocation(lng, lat, distance);
+        assertThat(books, hasSize(1));
+        assertThat(books.get(0).getTitle(), is("Best book"));
     }
 }
