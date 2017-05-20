@@ -57,7 +57,7 @@ public class Neo4jQueryTest {
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Villy Soevndal");
         assertThat(DTOBooks.size() > 0, is(true));
         for (BookDTO bk : DTOBooks) {
-            assertThat(bk.getAuthor(), is("Villy Soevndal"));
+            assertThat(bk.getAuthors().get(0), is("Villy Soevndal"));
             assertThat(bk.getTitle(), notNullValue());
             assertThat(bk.getId(), notNullValue());
         }

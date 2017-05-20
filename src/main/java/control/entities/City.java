@@ -1,4 +1,4 @@
-package logic.entities;
+package control.entities;
 
 /**
  * Created by ms on 04-05-17.

@@ -1,16 +1,12 @@
-package logic.services;
+package control.services;
 
-import data.IQuery;
 import data.dto.CityDTO;
-import logic.entities.City;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import static java.awt.SystemColor.text;
 
 /**
  * Created by Soren on 17-05-2017.
@@ -25,7 +21,7 @@ public class MapService {
     public String plotCitiesOnMap(List<CityDTO> cities){
         String cityString = citiesToHTMLArray(cities);
         String mapHTMLString = addPointsToHTML(cityString);
-        String path = "maps/" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()) + "map.html";
+        String path = "maps/" + new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Date()) + "map.html";
         boolean fileStatus = writeHtmlToFile(path, mapHTMLString);
         if(fileStatus) return path;
         else return "";

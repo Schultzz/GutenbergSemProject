@@ -98,7 +98,7 @@ public class MongoQuery implements IQuery {
 
     public List<BookDTO> queryBooksByAuthor(String author, String collectionName){
 
-        DBObject query = BasicDBObjectBuilder.start().add("author", author).get();
+        DBObject query = BasicDBObjectBuilder.start().add("authors", author).get();
         MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
         MongoCursor<Document> cursor = collection.find((Bson) query).iterator(); //This could be mocked
 
@@ -209,8 +209,10 @@ public class MongoQuery implements IQuery {
 
     public BookDTO bookDocumentToBookDTO(Document doc){
         BookDTO tempBook = null;
-        if(doc.containsKey("bookId") && doc.containsKey("title") && doc.containsKey("author")){
-            tempBook = new BookDTO(Integer.parseInt(doc.getString("bookId")), doc.getString("title"), doc.getString("author"));
+        if(doc.containsKey("bookId") && doc.containsKey("title") && doc.containsKey("authors")){
+            tempBook = new BookDTO(doc.getInteger("bookId"), doc.getString("title"), "");
+            List<String> authors = (List<String>) doc.get("authors");
+            tempBook.setAuthors(authors);
             List<String> cities = (List<String>) doc.get("cities");
             tempBook.setCities(queryCitiesByList(cities, "cities")); //Cities is hardcoded..
         }
