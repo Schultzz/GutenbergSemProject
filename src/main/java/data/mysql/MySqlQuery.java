@@ -7,7 +7,6 @@ import data.dto.CityDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,50 +15,145 @@ import java.util.List;
 public class MySqlQuery implements IQuery {
 
     private MySqlConnector connector;
+    private MysqlFormatter formatter;
 
     MySqlQuery(MySqlConnector connector) {
         this.connector = connector;
+        formatter = new MysqlFormatter();//TODO: maybe inject.
     }
 
+    //3
     public List<BookDTO> getBooksByAuthor(String author) {
-        ArrayList booklist = null;
-
+        List<BookDTO> booklist = null;
         try {
-            String sql = "SELECT * FROM books WHERE author = ?";
             connector.open();
-            PreparedStatement pstmt = connector.getConnection().prepareStatement(sql);
-            pstmt.setString(1, author);
-
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                booklist = new ArrayList();
-                do {
-                    BookDTO book = new BookDTO(
-                            rs.getInt("id"),
-                            rs.getString("title"),
-                            rs.getString("author"));
-                    booklist.add(book);
-                } while (rs.next());
-            }
+            booklist = queryBookByAuthor(author);
             connector.close();
-        } catch (SQLException ex) {
-            //handle exception or add to method.
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
         return booklist;
     }
 
+    //1
     public List<BookDTO> getBooksByCity(String city) {
-        return null;
+        List<BookDTO> booklist = null;
+        try {
+            connector.open();
+            booklist = queryBooksByCity(city);
+            connector.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return booklist;
     }
 
+    //4
     public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
-        return null;
+        List<BookDTO> booklist = null;
+        try {
+            connector.open();
+            booklist = queryBooksByGeoLocation(lon, lat, distance);
+            connector.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return booklist;
     }
 
+    //2
     public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
-        return null;
+        List<CityDTO> cities = null;
+        try {
+            connector.open();
+            cities = queryCitiesByBookTitle(bookTitle);
+            connector.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cities;
     }
+
+    //Below could be in a new class ---
+
+    protected List<BookDTO> queryBookByAuthor(String author) throws SQLException {
+
+
+        String sql = "SELECT DISTINCT b.book_id, b.title, l.city_name, l.lng, l.lat\n" +
+                "FROM location l\n" +
+                "  INNER JOIN location_book_join\n" +
+                "    ON l.city_name = location_book_join.city_name\n" +
+                "  INNER JOIN book b\n" +
+                "    ON location_book_join.book_id = b.book_id\n" +
+                "  INNER JOIN author_book_join\n" +
+                "    ON b.book_id = author_book_join.book_id\n" +
+                "  INNER JOIN author ON author_book_join.author_id = author.author_id\n" +
+                "  WHERE author.name = ? ;";
+
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(sql);
+        pstmt.setString(1, author);
+        ResultSet resultSet = pstmt.executeQuery();
+
+        return formatter.formatBooksWithCities(resultSet);
+    }
+
+    protected List<BookDTO> queryBooksByCity(String city) throws SQLException {
+
+        String sql = "SELECT a.name AS author, b.title\n" +
+                "FROM author a\n" +
+                "  INNER JOIN author_book_join ab\n" +
+                "    ON a.author_id = ab.author_id\n" +
+                "  INNER JOIN book b\n" +
+                "    ON ab.book_id = b.book_id\n" +
+                "  INNER JOIN location_book_join c\n" +
+                "    ON b.book_id = c.book_id\n" +
+                "WHERE city_name = ?;";
+
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(sql);
+        pstmt.setString(1, city);
+        ResultSet resultSet = pstmt.executeQuery();
+
+        return formatter.formatTitleWithAuthor(resultSet);
+    }
+
+    protected List<BookDTO> queryBooksByGeoLocation(double lon, double lat, double distance) throws SQLException {
+
+        String sql = "SELECT DISTINCT b.title, location.city_name, location.lng, location.lat\n" +
+                "FROM book b\n" +
+                "  INNER JOIN location_book_join\n" +
+                "  ON b.book_id = location_book_join.book_id\n" +
+                "  INNER JOIN location\n" +
+                "  ON location_book_join.city_name = location.city_name" +
+                "  WHERE st_distance_sphere(geom, point(?, ?)) <= ? * 1000;"; //in kilometers
+
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(sql);
+        pstmt.setString(1, lon + "");
+        pstmt.setString(2, lat + "");
+        pstmt.setDouble(3, distance);
+        ResultSet resultSet = pstmt.executeQuery();
+
+        return formatter.formatTitleWithCity(resultSet);
+    }
+
+    protected List<CityDTO> queryCitiesByBookTitle(String booktitle) throws SQLException {
+
+
+        String sql = "SELECT l.city_name, l.lat, l.lng\n" +
+                "FROM location l\n" +
+                "  INNER JOIN location_book_join lb\n" +
+                "    ON l.city_name = lb.city_name\n" +
+                "  INNER JOIN book b\n" +
+                "    ON b.book_id = lb.book_id\n" +
+                "  WHERE title = ?;";
+
+        PreparedStatement pstmt = connector.getConnection().prepareStatement(sql);
+        pstmt.setString(1, booktitle);
+        ResultSet resultSet = pstmt.executeQuery();
+
+        return formatter.formatCities(resultSet);
+    }
+
+
 }
+
+

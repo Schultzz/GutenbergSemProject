@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class MySqlConnectionTest {
 
     private static MySqlConnector mySqlConnector;
-    private static String expectedUrl = "jdbc:mysql://127.0.0.1/gutenberg_test";
+    private static String expectedUrl = "jdbc:mysql://127.0.0.1/gutenberg";
     private static String expectedUsername = "tester";
     private static String expectedPassword = "pwd";
 

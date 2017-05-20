@@ -56,6 +56,7 @@ public class Book {
         String csvString = "\"" + title.trim() + "\",\"";
 
         for (Author author : this.authors) {
+            csvString += author.getId() + "\",\"";
             csvString += author.getName() + ",";
         }
         csvString = csvString.trim();
