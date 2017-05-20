@@ -6,7 +6,6 @@ import data.dto.CityDTO;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import mongo.MongoQuery;
 
 import java.io.IOException;
 import java.util.ArrayList;
