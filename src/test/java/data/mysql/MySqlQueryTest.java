@@ -31,7 +31,8 @@ public class MySqlQueryTest {
 
     private static MySqlConnector mySqlConnector;
     private MySqlQuery query;
-    private String path = "src/test/resources/mysql/";
+    private String pathSetup = "src/test/resources/mysql/setup/";
+    private String pathResult = "src/test/resources/mysql/result/";
 
 
     @BeforeClass
@@ -49,14 +50,14 @@ public class MySqlQueryTest {
         IDatabaseConnection dbConnection = new DatabaseConnection(connection, "gutenberg_test");
         dbConnection.getConfig().setProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER, new MySqlMetadataHandler());
 
-        IDataSet authorBook = new FlatXmlDataSetBuilder().build(new FileInputStream(path + "authorBook.xml"));
-        IDataSet locationBook = new FlatXmlDataSetBuilder().build(new FileInputStream(path + "locationBook.xml"));
+        IDataSet authorBook = new FlatXmlDataSetBuilder().build(new FileInputStream(pathSetup + "authorBook.xml"));
+        IDataSet locationBook = new FlatXmlDataSetBuilder().build(new FileInputStream(pathSetup + "locationBook.xml"));
 
         DatabaseOperation.TRUNCATE_TABLE.execute(dbConnection, authorBook);
         DatabaseOperation.TRUNCATE_TABLE.execute(dbConnection, locationBook);
-        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(path + "author.xml")));
-        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(path + "book.xml")));
-        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(path + "location.xml")));
+        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(pathSetup + "author.xml")));
+        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(pathSetup + "book.xml")));
+        DatabaseOperation.CLEAN_INSERT.execute(dbConnection, new FlatXmlDataSetBuilder().build(new FileInputStream(pathSetup + "location.xml")));
         DatabaseOperation.CLEAN_INSERT.execute(dbConnection, authorBook);
         DatabaseOperation.CLEAN_INSERT.execute(dbConnection, locationBook);
         mySqlConnector.close();
@@ -86,8 +87,10 @@ public class MySqlQueryTest {
     @Test
     public void getBooksByValidCity() throws SQLException {
         //act
-        List<BookDTO> books = query.getBooksByCity("Kent");
+        List<BookDTO> books = query.getBooksByCity("Maliana");
 
+        //assert
+        assertThat(books.size(), is(1));
     }
 
     @Test
@@ -98,8 +101,10 @@ public class MySqlQueryTest {
     }
 
     @Test
-    public void getBooksWithin10kmFromNewYork() {
-        List<BookDTO> books = query.getBooksByGeoLocation(-73.935242, 40.730610, 10);
+    public void getBooksWithin10kmFromMaliana() {
+        List<BookDTO> books = query.getBooksByGeoLocation(125.21972, -8.99167, 10);
+        //assert
+        assertThat(books.size(), is(1));
     }
 
     @Test
@@ -110,8 +115,9 @@ public class MySqlQueryTest {
 
     @Test
     public void getCitiesByBookTitle() {
-        List<CityDTO> cities = query.getCitiesByBookTitle("Torpedo War, and Submarine Explosions");
-
+        List<CityDTO> cities = query.getCitiesByBookTitle("Pick a Crime");
+        //assert
+        assertThat(cities.size(), is(1));
     }
 
     @Test
