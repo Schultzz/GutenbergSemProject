@@ -10,13 +10,13 @@ public class BookDTO {
 
     private int id;
     private String title;
-    private String author;
+    private List<String> authors;
     private List<CityDTO> cities;
 
     public BookDTO(int id, String title, String author) {
         this.id = id;
         this.title = title;
-        this.author = author;
+        this.authors = new ArrayList<String>();
         this.cities = new ArrayList<CityDTO>();
     }
 
@@ -48,11 +48,11 @@ public class BookDTO {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public List<String> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
     }
 }

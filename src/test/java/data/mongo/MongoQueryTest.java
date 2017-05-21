@@ -6,7 +6,6 @@ import data.dto.CityDTO;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import mongo.MongoQuery;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,9 +58,9 @@ public class MongoQueryTest {
         //Test setup
         //Books
         List<Document> documents = new ArrayList<Document>(); //Id's could be ints.
-        documents.add(new Document("bookId", "1000").append("title", "Best book").append("author", "Ernest Hemingway").append("cities", Arrays.asList("London", "Copenhagen")));
-        documents.add(new Document("bookId", "1010").append("title", "Good book").append("author", "Ernest Hemingway").append("cities", Arrays.asList("London", "Paris")));
-        documents.add(new Document("bookId", "1020").append("title", "Another book").append("author", "Stephen King").append("cities", Arrays.asList("Dublin", "Moscow")));
+        documents.add(new Document("bookId", 1000).append("title", "Best book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList("London", "Copenhagen")));
+        documents.add(new Document("bookId", 1010).append("title", "Good book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList("London", "Paris")));
+        documents.add(new Document("bookId", 1020).append("title", "Another book").append("authors", Arrays.asList("Stephen King")).append("cities", Arrays.asList("Dublin", "Moscow")));
         _mongoClient.getDatabase(databaseName).getCollection(bookCollectionName).insertMany(documents);
         //Cities
         documents = new ArrayList<Document>();
@@ -82,10 +81,10 @@ public class MongoQueryTest {
     @Test
     public void bookDocumentToBookDTOTest(){
         Document doc = new Document();
-        String bookId = "123";
+        int bookId = 123;
         doc.put("bookId", bookId);
         String author = "Per Laursen";
-        doc.put("author", author);
+        doc.put("authors", Arrays.asList(author));
         String title = "Mechanics 101";
         doc.put("title", title);
         List cities = Arrays.asList("London", "Copenhagen");
@@ -94,8 +93,8 @@ public class MongoQueryTest {
 
         BookDTO book = mongoQuery.bookDocumentToBookDTO(doc);
         assertThat(book, is(notNullValue()));
-        assertThat(book.getId(), is(Integer.parseInt(bookId)));
-        assertThat(book.getAuthor(), is(author));
+        assertThat(book.getId(), is(bookId));
+        assertThat(book.getAuthors().get(0), is(author));
         assertThat(book.getTitle(), is(title));
         assertThat(book.getCities(), hasSize(2));
 
