@@ -37,8 +37,11 @@ public class BookScanner {
 
         String[] fileArray = filename.split("/");
         String file = fileArray[fileArray.length - 1];
+        String bookName = file.replace(".txt", "");
         String fileString = filename.replace(file, "pg" + file);
         fileString = fileString.replace(".txt", ".rdf");
+        fileString = fileString.replace("/books/", "/metadata/" + bookName + "/" );
+
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;

@@ -18,5 +18,5 @@ vm/.vagrant/
 
 # Bookscanner
 src/main/resources/bookscanner/books/
-src/main/resources/bookscanner/cache/
+src/main/resources/bookscanner/metadata/
 src/main/resources/bookscanner/csv/
