@@ -26,12 +26,12 @@ public class Neo4jQuery implements IQuery {
 
     public List<BookDTO> getBooksByAuthor(String author) {
         Session session = connection.getConnection(URL, USER, PASSWORD);
-        //String query = "MATCH (b:Book)-[:WRITTENBY]->(a:Author{name:\""+author+"\"}) RETURN a as author, b as book";
-        String query = "MATCH (b:Book {title:\"Mit liv i Sverige\"})-[:WRITTENBY]->(a:Author) \n" +
-                "MATCH (b)-[:CONTAINS]->(c:City) \n" +
+        String query = "MATCH (b:Book)-[:AUTHORED_BY]->(:Author {name:\"" + author + "\"}) " +
+                "MATCH (b)-[:AUTHORED_BY]->(a:Author) " +
+                "MATCH (b)-[:MENTIONS]->(c:City) " +
                 "RETURN collect(distinct(a)) as authors, collect(distinct(c)) as cities, b as book";
         StatementResult result = session.run(query);
-        List<BookDTO> resultList = convertToDTO(result);
+        List<BookDTO> resultList = convertToBookDTO(result);
         session.close();
 
         return resultList;
@@ -40,21 +40,61 @@ public class Neo4jQuery implements IQuery {
 
     public List<BookDTO> getBooksByCity(String city) {
         Session session = connection.getConnection(URL, USER, PASSWORD);
-        String query = "MATCH (b:Book)-[co:CONTAINS]->(c:City{name: \"Name\"})\n" +
-                "MATCH (b)-[w:WRITTENBY]->(a:Author)\n" +
-                "RETURN b.title, a.name";
-        return null;
+        String query = "MATCH (b:Book)-[:MENTIONS]->(:City{name: \"" + city + "\"}) " +
+                "MATCH (b)-[:AUTHORED_BY]->(a:Author)" +
+                "MATCH (b)-[:MENTIONS]->(c:City) " +
+                "RETURN collect(distinct(a)) as authors, collect(distinct(c)) as cities, b as book";
+        StatementResult result = session.run(query);
+        List<BookDTO> resultList = convertToBookDTO(result);
+        session.close();
+
+        return resultList;
+
     }
 
     public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
-        return null;
+        Session session = connection.getConnection(URL, USER, PASSWORD);
+        String query = "MATCH (c:City) " +
+                "WITH point({longitude: c.longitude, latitude: c.latitude}) AS aPoint, point({latitude: "+ lon +", longitude: "+ lat +"}) AS bPoint, c " +
+                "WITH DISTINCT round(distance(aPoint, bPoint)) AS distance, c " +
+                "ORDER BY distance DESC " +
+                "WHERE distance < "+ distance +" " +
+                "MATCH (b:Book)-[:MENTIONS]->(c) " +
+                "MATCH (b)-[:AUTHORED_BY]->(a:Author) "+
+                "RETURN distance, c.name, b as book, collect(DISTINCT(c)) as cities, collect(DISTINCT(a)) as authors";
+        StatementResult result = session.run(query);
+        List<BookDTO> resultList = convertToBookDTO(result);
+        session.close();
+
+        return resultList;
     }
 
     public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
-        return null;
+        Session session = connection.getConnection(URL, USER, PASSWORD);
+        String query = "MATCH (b:Book{title:\"" + bookTitle + "\"})-[:MENTIONS]->(c:City) " +
+                "RETURN collect(distinct(c)) as cities";
+        StatementResult result = session.run(query);
+        List<CityDTO> resultList = convertToCityDTO(result);
+        session.close();
+
+        return resultList;
     }
 
-    private List<BookDTO> convertToDTO(StatementResult res) {
+    private List<CityDTO> convertToCityDTO(StatementResult res) {
+        List<CityDTO> resultList = new ArrayList();
+
+        while (res.hasNext()) {
+            Record record = res.next();
+
+            Value cities = record.get("cities");
+            for (Value val : cities.values()) {
+                resultList.add(new CityDTO(val.get("name").asString(), val.get("latitude").asDouble(), val.get("longitude").asDouble()));
+            }
+        }
+        return resultList;
+    }
+
+    private List<BookDTO> convertToBookDTO(StatementResult res) {
         List<BookDTO> resultList = new ArrayList<BookDTO>();
 
         while (res.hasNext()) {
