@@ -1,5 +1,5 @@
 CREATE DATABASE gutenberg;
-USE gutenberg;
+USE gutenberg_test;
 
 DROP TABLE author_book_join;
 DROP TABLE location_book_join;

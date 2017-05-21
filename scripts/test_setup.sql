@@ -18,8 +18,8 @@ CREATE TABLE location (
 );
 
 CREATE TABLE author_book_join (
-   book_id INT NOT NULL,
-   author_id INT NOT NULL,
+  book_id INT NOT NULL,
+  author_id INT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES author(author_id),
   FOREIGN KEY (book_id) REFERENCES book(book_id)
 );
