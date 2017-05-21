@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 public class CityScannerTest {
 
     private static String path = "src/test/resources/";
+
     @Test
     public void cityScannerTest() throws FileNotFoundException {
 
@@ -22,8 +23,8 @@ public class CityScannerTest {
         CityScanner cityScanner = new CityScanner(filename);
         HashMap<String, String> cityMap = cityScanner.getCitiesFromTxtFile();
 
-        assertThat(cityMap.get("Kusk"), is("Kushk"));
-        assertThat(cityMap.get("Kondôz"), is("Kunduz"));
+        assertThat(cityMap.get("kshk"), is("Kushk"));
+        assertThat(cityMap.get("Qonduz"), is("Kunduz"));
     }
 
     @Test(expected = FileNotFoundException.class)
