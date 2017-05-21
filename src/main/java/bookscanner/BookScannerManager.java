@@ -27,7 +27,7 @@ public class BookScannerManager {
         Book book = new Book();
 
         String bookAsString = bookScanner.getBookAsString(filename);
-
+        if(bookAsString.length()==0) return null;
         HashSet<String> matchCapitalizedWords = bookScanner.getCapitalizedWords(bookAsString);
 
         for (String word : matchCapitalizedWords) {
@@ -41,7 +41,7 @@ public class BookScannerManager {
         }
 
         //Find and set metadata.
-        bookScanner.setMetaDataOnBook(book, filename);
+        book = bookScanner.setMetaDataOnBook(book, filename);
 
         return book;
     }
@@ -49,14 +49,23 @@ public class BookScannerManager {
 
     public List<Book> scanAllBooks(String filePath) throws IOException {
         List<Book> books = new ArrayList<Book>();
-
+        Book book;
         File folder = new File(filePath);
         File[] listOfFiles = folder.listFiles();
-
+        long estimatedTime;
+        long startTime = System.currentTimeMillis();
         for (int i = 0; i < listOfFiles.length; i++) {
-            books.add(mapCities(filePath + listOfFiles[i].getName()));
+            book = mapCities(filePath + listOfFiles[i].getName());
+            if(book!=null) {
+                books.add(book);
+                if (i % 1000 == 0) {
+                    estimatedTime = System.currentTimeMillis() - startTime;
+                    System.out.println("Time was: " + estimatedTime + ". " + i + "/" + listOfFiles.length);
+                }
+            }
         }
-
+        estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println("Reading done. Time was: " + estimatedTime + ".");
         return books;
     }
 
@@ -65,6 +74,8 @@ public class BookScannerManager {
 
         String[] csvFiles = {filePath + "full.csv", filePath + "books.csv", filePath + "author.csv", filePath + "authorRelations.csv", filePath + "cityRelations.csv"};
         PrintWriter[] pws = createFiles(csvFiles);
+
+        pws[0].write("bookId,title,authors,cities\n");
 
         for (Author au : bookScanner.getAuthorMap().values()) {
             pws[2].write("\"" + au.getId() + "\"," + "\"" + au.getName() + "\"\n");
@@ -100,7 +111,7 @@ public class BookScannerManager {
     }
 
     public static void main(String[] args) throws IOException {
-        String filePath = "src/main/resources/bookscanner/";
+        String filePath = "resources/bookscanner/";
         String booksFilePath = filePath + "books/";
         String csvFiles = filePath + "csv/";
         String citiesFilePath = filePath + "cities15000.txt";

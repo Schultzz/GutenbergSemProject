@@ -14,8 +14,22 @@ public class Author {
 
     public Author(String id, String name) {
         this.id = id;
-        this.name = name;
+        this.name = rebuildAuthorName(name);
         books = new ArrayList<Book>();
+    }
+
+    public String rebuildAuthorName(String author){
+        author = author.replace("\"", "'");
+        String[] names = author.split(",");
+
+        if(names.length>1) {
+            String fullName = names[1].substring(1) + " " + names[0];
+            return fullName;
+        }
+        else
+            return author;
+
+
     }
 
     public void addBook(Book book) {

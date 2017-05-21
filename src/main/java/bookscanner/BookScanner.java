@@ -34,7 +34,7 @@ public class BookScanner {
     }
 
     public Book setMetaDataOnBook(Book book, String filename) throws IOException {
-
+        filename = filename.toLowerCase();
         String[] fileArray = filename.split("/");
         String file = fileArray[fileArray.length - 1];
         String bookName = file.replace(".txt", "");
@@ -62,11 +62,19 @@ public class BookScanner {
                     Element element2 = (Element) tempNode2;
                     String[] authorIDs = element2.getAttribute("rdf:about").split("/");
                     String authorID = authorIDs[authorIDs.length - 1];
-                    Author author = new Author(authorID, element.getFirstChild().getNodeValue());
+                    String authorName = element.getFirstChild().getNodeValue();
+                    Author author = new Author(authorID, authorName);
                     addAuthorToMap(authorID, author);
                     book.addAuthor(author);
                     book.setId(file.replace(".txt", ""));
                 }
+
+            }
+            if(nList.getLength()==0){
+                Author author = new Author("49", "Unknown");
+                addAuthorToMap("49", author);
+                book.addAuthor(author);
+                book.setId("49");
             }
 
             nList = document.getElementsByTagName("dcterms:title");
@@ -81,6 +89,9 @@ public class BookScanner {
             e.printStackTrace();
         } catch (SAXException e) {
             e.printStackTrace();
+        }catch (FileNotFoundException ex){
+            System.out.println("FileNotFound on " + filename);
+            return null;
         }
         return book;
     }
@@ -101,10 +112,12 @@ public class BookScanner {
 
     public String getBookAsString(String fileName) throws FileNotFoundException {
 
-        String bookAsString;
-
-        bookAsString = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
-
+        String bookAsString = "";
+        try {
+            bookAsString = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
+        }catch (NoSuchElementException e){
+            System.out.println("No such elem ex on " + fileName);
+        }
         return bookAsString;
     }
 
