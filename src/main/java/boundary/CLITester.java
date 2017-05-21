@@ -6,6 +6,10 @@ import data.IQuery;
 import data.mysql.MySqlConnector;
 import data.mysql.MySqlQuery;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Created by Flashed on 20-05-2017.
  */
@@ -23,6 +27,14 @@ public class CLITester {
         IController controller = new Controller(query);
         //List<Book> books = controller.getBookTitlesByCity("London");
         System.out.println(controller.plotCitiesByBookTitle("Belgians Under the German Eagle"));
+        System.out.println(controller.getBookTitlesByCity("London").size());
+
+        File htmlFile = new File(controller.plotCitiesByBookTitle("Belgians Under the German Eagle"));
+        try {
+            Desktop.getDesktop().browse(htmlFile.toURI());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //List<Book> books2 = controller.getBooksByGeoLocation(13.404954, 52.520008, 1);
     }
 
