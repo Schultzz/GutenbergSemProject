@@ -1,11 +1,5 @@
 USE gutenberg_test;
 
-DROP TABLE author_book_join;
-DROP TABLE location_book_join;
-DROP TABLE author;
-DROP TABLE book;
-DROP TABLE location;
-
 CREATE TABLE author (
   author_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   name VARCHAR( 60 ) NOT NULL
