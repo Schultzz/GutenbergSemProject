@@ -72,13 +72,14 @@ public class Neo4jQueryTest {
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Villy Soevndal");
         assertThat(DTOBooks.size() > 0, is(true));
         for (BookDTO bk : DTOBooks) {
-            assertThat(bk.getAuthors(), hasItem("Villy Soevndale"));
+            assertThat(bk.getAuthors(), hasItem("Villy Soevndal"));
             assertThat(bk.getCities(), notNullValue());
             assertThat(bk.getId(), notNullValue());
             assertThat(bk.getTitle(), notNullValue());
         }
     }
 
+    @Ignore
     @Test
     public void testInvalidBooksByAuthorQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
@@ -86,6 +87,7 @@ public class Neo4jQueryTest {
         assertThat(DTOBooks.size() == 0, is(true));
     }
 
+    @Ignore
     @Test
     public void testValidBooksByCityQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
