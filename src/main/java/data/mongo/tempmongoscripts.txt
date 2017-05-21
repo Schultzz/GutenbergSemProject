@@ -10,18 +10,31 @@ db.cities.find({location:{$near: {$geometry: {type: "Point", coordinates[-73.966
 
 db.cities.find({ location:{ $geoWithin:{ $centerSphere: [ [ 12.568337, 55.676098 ], 5 / 3963.2 ] } } })
 
+var counter = 0;
 db.books.find().forEach(function(elemBook){
+    counter++;
     elemBook.cities.forEach(function(elemCity){
     var city = db.cities.findOne({name : elemCity});
+    print(city.name);
     elemCity = {name : elemCity, location: city.location};
-    });
-    print(elemBook.cities);
     });
 
+    print(counter);
+    });
+
+var counter = 0;
 db.books.find().forEach(function(elemBook){
+    var cities = [];
+    counter++;
     elemBook.cities.forEach(function(elemCity){
     var city = db.cities.findOne({name : elemCity});
+    if(city != null){
     elemCity = {name : elemCity, location: city.location};
-    })
+    cities.push(elemCity);
+    }
+    });
+    elemBook.cities = cities;
     db.books.save(elemBook);
+    print(counter);
 });
+

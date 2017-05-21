@@ -184,9 +184,9 @@ public class MongoQuery implements IQuery {
 
         BookDTO tempBook;
         List<BookDTO> books = new ArrayList<BookDTO>();
-
+        Document doc;
         while(cursor.hasNext()){
-            Document doc = cursor.next();
+            doc = cursor.next();
 
             tempBook = bookDocumentToBookDTO(doc);
             if(tempBook != null) {
@@ -198,19 +198,26 @@ public class MongoQuery implements IQuery {
     }
 
     public CityDTO cityDocumentToCityDTO(Document doc){
+
         CityDTO tempCity = null;
-        if(doc.containsKey("name") && doc.containsKey("location")) {
-            Document locationDoc = (Document) doc.get("location");
-            ArrayList<Double> coordinates = (ArrayList<Double>) locationDoc.get("coordinates");
-            tempCity = new CityDTO(doc.getString("name"), coordinates.get(0), coordinates.get(1));
-        }
+
+            if (doc.containsKey("name") && doc.containsKey("location")) {
+                Document locationDoc = (Document) doc.get("location");
+                ArrayList<Double> coordinates = (ArrayList<Double>) locationDoc.get("coordinates");
+                tempCity = new CityDTO(doc.getString("name"), coordinates.get(0), coordinates.get(1));
+            }
+
         return tempCity;
     }
 
     public BookDTO bookDocumentToBookDTO(Document doc){
         BookDTO tempBook = null;
         if(doc.containsKey("bookId") && doc.containsKey("title") && doc.containsKey("authors")){
-            tempBook = new BookDTO(doc.getInteger("bookId"), doc.getString("title"), "");
+            String titleString;
+            Object title = doc.get("title");
+            if(title.getClass() == Integer.class) titleString = title+"";
+            else titleString = ((String) title);
+            tempBook = new BookDTO(doc.getInteger("bookId"), titleString, "");
             List<String> authors = (List<String>) doc.get("authors");
             tempBook.setAuthors(authors);
             List<String> cities = (List<String>) doc.get("cities");

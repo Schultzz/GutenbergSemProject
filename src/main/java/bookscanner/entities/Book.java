@@ -96,7 +96,7 @@ public class Book {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("\"" + this.getId() + "\",");
-        stringBuilder.append("\"" + this.getTitle() + "\"\n");
+        stringBuilder.append("\"" + this.getTitle().trim() + "\"\n");
 
         return stringBuilder.toString();
     }
