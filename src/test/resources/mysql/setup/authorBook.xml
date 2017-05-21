@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <author_book_join book_id="51653" author_id="116"/>
+    <author_book_join book_id="51656" author_id="116"/>
+    <author_book_join book_id="51657" author_id="116"/>
+    <author_book_join book_id="51662" author_id="116"/>
+    <author_book_join book_id="51668" author_id="168"/>
+    <author_book_join book_id="51681" author_id="168"/>
+    <author_book_join book_id="51682" author_id="168"/>
+    <author_book_join book_id="51687" author_id="168"/>
+    <author_book_join book_id="51698" author_id="168"/>
+    <author_book_join book_id="51699" author_id="216"/>
+    <author_book_join book_id="51713" author_id="216"/>
+    <author_book_join book_id="51714" author_id="216"/>
+    <author_book_join book_id="51716" author_id="216"/>
+    <author_book_join book_id="51726" author_id="216"/>
+    <author_book_join book_id="51727" author_id="216"/>
+    <author_book_join book_id="51730" author_id="216"/>
+</dataset>
