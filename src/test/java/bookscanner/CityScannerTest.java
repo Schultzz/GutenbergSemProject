@@ -1,5 +1,6 @@
-package logic.bookscanner;
+package bookscanner;
 
+import bookscanner.CityScanner;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;

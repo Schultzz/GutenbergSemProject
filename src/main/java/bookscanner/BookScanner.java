@@ -1,7 +1,7 @@
-package logic.bookscanner;
+package bookscanner;
 
-import logic.entities.Author;
-import logic.entities.Book;
+import bookscanner.entities.Author;
+import bookscanner.entities.Book;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -17,7 +17,7 @@ public class MySqlQuery implements IQuery {
     private MySqlConnector connector;
     private MysqlFormatter formatter;
 
-    MySqlQuery(MySqlConnector connector) {
+    public MySqlQuery(MySqlConnector connector) {
         this.connector = connector;
         formatter = new MysqlFormatter();//TODO: maybe inject.
     }

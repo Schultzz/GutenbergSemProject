@@ -12,7 +12,6 @@ import org.dbunit.ext.mysql.MySqlMetadataHandler;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -28,7 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by ms on 05-05-17.
  */
-public class MySqlQueryTest {
+public class MySqlQueryIT {
 
     private static MySqlConnector mySqlConnector;
     private MySqlQuery query;

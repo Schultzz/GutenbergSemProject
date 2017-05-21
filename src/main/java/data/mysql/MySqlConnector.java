@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by ms on 08-05-17.
  */
-class MySqlConnector {
+public class MySqlConnector {
 
     private String url;
     private String username;

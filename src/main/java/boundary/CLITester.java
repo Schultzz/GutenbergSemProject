@@ -2,12 +2,9 @@ package boundary;
 
 import control.controller.Controller;
 import control.controller.IController;
-import control.entities.Book;
 import data.IQuery;
-import data.mongo.MongoQuery;
-
-import java.net.ConnectException;
-import java.util.List;
+import data.mysql.MySqlConnector;
+import data.mysql.MySqlQuery;
 
 /**
  * Created by Flashed on 20-05-2017.
@@ -17,8 +14,9 @@ public class CLITester {
     public static void main(String[] args) {
         IQuery query = null;
         try {
-             query = new MongoQuery("mongodb://localhost", "27017", "user", "password", "project");
-        } catch (ConnectException e) {
+            //query = new MongoQuery("mongodb://localhost", "27017", "user", "password", "project");
+            query = new MySqlQuery(new MySqlConnector("jdbc:mysql://127.0.0.1/gutenberg", "tester", "pwd"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

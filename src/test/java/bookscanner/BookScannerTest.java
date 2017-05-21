@@ -1,6 +1,6 @@
-package logic.bookscanner;
+package bookscanner;
 
-import logic.entities.Book;
+import bookscanner.entities.Book;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 //package logic.bookscanner;
 //
-//import logic.entities.Author;
-//import logic.entities.Book;
+//import bookscanner.entities.Author;
+//import bookscanner.entities.Book;
 //import org.junit.Before;
 //import org.junit.Ignore;
 //import org.junit.Test;

@@ -1,4 +1,4 @@
-package logic.bookscanner;
+package bookscanner;
 
 import org.junit.BeforeClass;
 
@@ -28,7 +28,7 @@ public class LogicIT {
     //TODO: Fix test
 //    @Test
 //    public void scanBookTest() throws IOException {
-//        Book book = logic.mapCities(path + "1001.txt");
+//        Book book = bookscanner.mapCities(path + "1001.txt");
 //
 //        assertThat(book.getAuthors(), hasItems("Dante Alighieri", "Henry Wadsworth Longfellow"));
 //        assertThat(book.getAuthors().size(), is(2));

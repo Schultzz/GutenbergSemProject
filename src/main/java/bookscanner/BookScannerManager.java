@@ -1,7 +1,7 @@
-package logic.bookscanner;
+package bookscanner;
 
-import logic.entities.Author;
-import logic.entities.Book;
+import bookscanner.entities.Author;
+import bookscanner.entities.Book;
 
 import java.io.*;
 import java.util.ArrayList;
