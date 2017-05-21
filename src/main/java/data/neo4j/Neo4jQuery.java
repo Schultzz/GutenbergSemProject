@@ -1,14 +1,11 @@
 package data.neo4j;
 
-import com.sun.xml.internal.fastinfoset.util.ValueArray;
 import data.IQuery;
 import data.dto.BookDTO;
 import data.dto.CityDTO;
 import org.neo4j.driver.v1.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
