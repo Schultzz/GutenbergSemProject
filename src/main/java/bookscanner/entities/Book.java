@@ -31,6 +31,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
+        title = title.replace("\"", "'");
         if (title.contains("\n")) {
             this.title = title.substring(0, title.indexOf("\n"));
         } else {
@@ -52,8 +53,13 @@ public class Book {
 
     //Should be in a formatter class.
     public String asCsvString() {
-
-        String csvString = "\"" + title.trim() + "\",\"";
+        String idString;
+        if(getId().length() ==0){
+            idString = "0";
+        }else {
+            idString = getId();
+        }
+        String csvString = idString + "," + "\"" + title.trim() + "\",\"";
 
         for (Author author : this.authors) {
             csvString += author.getName() + ",";
@@ -64,8 +70,12 @@ public class Book {
         for (String city : this.cities) {
             csvString += city.trim() + ",";
         }
-        csvString = csvString.trim();
-        csvString = csvString.substring(0, csvString.length() - 1) + "\"\n";
+        if(this.cities.size()!=0) {
+            csvString = csvString.trim();
+            csvString = csvString.substring(0, csvString.length() - 1) + "\"\n";
+        }else{
+            csvString += "\"\n";
+        }
 
         return csvString;
     }
