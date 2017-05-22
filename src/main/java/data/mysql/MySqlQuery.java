@@ -125,7 +125,7 @@ public class MySqlQuery implements IQuery {
 
     protected List<BookDTO> queryBooksByCity(String city) throws SQLException {
 
-        String sql = "SELECT a.name AS author, b.title\n" +
+        String sql = "SELECT DISTINCT a.name AS author, b.title\n" +
                 "FROM author a\n" +
                 "  INNER JOIN author_book_join ab\n" +
                 "    ON a.author_id = ab.author_id\n" +
