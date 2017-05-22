@@ -106,10 +106,10 @@ public class Neo4jQueryTest {
         String query2 = "DROP INDEX ON :Book(id, title);";
         String query3 = "DROP INDEX ON :City(name, latitude, longitude);";
         String query4 = "DROP INDEX ON :Author(id, name);";
-        //session.run(query1);
-        //session.run(query2);
-        //session.run(query3);
-        //session.run(query4);
+        //session.runQuery(query1);
+        //session.runQuery(query2);
+        //session.runQuery(query3);
+        //session.runQuery(query4);
         session.close();
         driver.close();
     }
