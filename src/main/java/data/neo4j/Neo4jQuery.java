@@ -55,7 +55,7 @@ public class Neo4jQuery implements IQuery {
     public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
         Session session = connection.getConnection(URL, USER, PASSWORD);
         String query = "MATCH (c:City) " +
-                "WITH point({longitude: c.longitude, latitude: c.latitude}) AS aPoint, point({latitude: "+ lon +", longitude: "+ lat +"}) AS bPoint, c " +
+                "WITH point({longitude: toFloat(c.longitude), latitude: toFloat(c.latitude)}) AS aPoint, point({latitude: "+ lat +", longitude: "+ lon +"}) AS bPoint, c " +
                 "WITH DISTINCT round(distance(aPoint, bPoint)) AS distance, c " +
                 "ORDER BY distance DESC " +
                 "WHERE distance < "+ distance +" " +
@@ -88,7 +88,12 @@ public class Neo4jQuery implements IQuery {
 
             Value cities = record.get("cities");
             for (Value val : cities.values()) {
-                resultList.add(new CityDTO(val.get("name").asString(), val.get("latitude").asDouble(), val.get("longitude").asDouble()));
+                try{
+                    resultList.add(new CityDTO(val.get("name").asString(), Double.parseDouble(val.get("longitude").asString()),Double.parseDouble(val.get("latitude").asString())));
+                }
+                catch(org.neo4j.driver.v1.exceptions.value.Uncoercible e){
+                    System.out.println("Error in converting values to correct types: City: "+val.get("name").asString() +" \nLatitude: " + val.get("latitude").asString() + ", Longitude: " + val.get("longitude").asString());
+                }
             }
         }
         return resultList;
@@ -103,12 +108,12 @@ public class Neo4jQuery implements IQuery {
             Value book = record.get("book");
             Value authors = record.get("authors");
             Value cities = record.get("cities");
-            BookDTO bk = new BookDTO(book.get("id").asInt(), book.get("title").asString(), "");
+            BookDTO bk = new BookDTO(Integer.parseInt(book.get("id").asString()), book.get("title").asString(), "");
             for (Value val : authors.values()) {
                 bk.addAuthor((val.get("name").asString()));
             }
             for (Value val : cities.values()) {
-                bk.addCity(new CityDTO(val.get("name").asString(), val.get("latitude").asDouble(), val.get("longitude").asDouble()));
+                bk.addCity(new CityDTO(val.get("name").asString(), Double.parseDouble(val.get("longitude").asString()),Double.parseDouble(val.get("latitude").asString())));
             }
 
             resultList.add(bk);

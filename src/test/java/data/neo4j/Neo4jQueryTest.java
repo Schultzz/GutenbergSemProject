@@ -35,18 +35,18 @@ public class Neo4jQueryTest {
         String query1 = "CREATE INDEX ON :Book(id, title);";
         String query2 = "CREATE INDEX ON :City(name, latitude, longitude);";
         String query3 = "CREATE INDEX ON :Author(id, name);";
-        String query4 = "MERGE (a:Book { title: \"Sverige for Svenskere\", id: 1 }) " +
-                "MERGE (b:Book { title: \"Mit liv i Sverige\", id: 2 }) " +
-                "MERGE (c:Book { title: \"Awesome Book\", id: 3 }) " +
-                "MERGE (d:Book { title: \"On the Poles\", id: 4 }) " +
-                "MERGE (e:Book { title: \"Per i Vildmarken\", id: 5 }) " +
-                "MERGE (g:Author { name: \"Villy Soevndal\", id: 10}) " +
-                "MERGE (h:Author { name: \"Per\", id: 11}) " +
-                "MERGE (i:Author { name: \"Mogens Lykketoft\", id: 12}) " +
-                "MERGE (k:City { name: \"Copenhagen\", latitude: 55.676098, longitude: 12.568337}) " +
-                "MERGE (l:City { name: \"Stockholm\", latitude: 59.334591, longitude: 18.063240}) " +
-                "MERGE (m:City { name: \"Oslo\", latitude: 59.911491, longitude: 10.757933}) " +
-                "MERGE (n:City { name: \"Helsinki\", latitude: 60.192059, longitude: 24.945831}) " +
+        String query4 = "MERGE (a:Book { title: \"Sverige for Svenskere\", id: \"1\" }) " +
+                "MERGE (b:Book { title: \"Mit liv i Sverige\", id: \"2\"}) " +
+                "MERGE (c:Book { title: \"Awesome Book\", id: \"3\" }) " +
+                "MERGE (d:Book { title: \"On the Poles\", id: \"4\" }) " +
+                "MERGE (e:Book { title: \"Per i Vildmarken\", id: \"5\" }) " +
+                "MERGE (g:Author { name: \"Villy Soevndal\", id: \"10\"}) " +
+                "MERGE (h:Author { name: \"Per\", id: \"11\"}) " +
+                "MERGE (i:Author { name: \"Mogens Lykketoft\", id: \"11\"}) " +
+                "MERGE (k:City { name: \"Copenhagen\", latitude: \"55.676098\", longitude: \"12.568337\"}) " +
+                "MERGE (l:City { name: \"Stockholm\", latitude: \"59.334591\", longitude: \"18.063240\"}) " +
+                "MERGE (m:City { name: \"Oslo\", latitude: \"59.911491\", longitude: \"10.757933\"}) " +
+                "MERGE (n:City { name: \"Helsinki\", latitude: \"60.192059\", longitude: \"24.945831\"}) " +
                 "MERGE (a)-[:AUTHORED_BY]->(g)" +
                 "MERGE (b)-[:AUTHORED_BY]->(g)" +
                 "MERGE (b)-[:AUTHORED_BY]->(i)" +
@@ -140,7 +140,7 @@ public class Neo4jQueryTest {
     @Test
     public void testValidBooksByGeoQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
-        List<BookDTO> DTOBooks = nq.getBooksByGeoLocation(59.911491, 10.757933, 800000);
+        List<BookDTO> DTOBooks = nq.getBooksByGeoLocation(10.757933, 59.911491, 800000);
         assertThat(DTOBooks.size(), is(4));
         for (BookDTO bk: DTOBooks) {
             assertThat(bk.getAuthors(), notNullValue());
