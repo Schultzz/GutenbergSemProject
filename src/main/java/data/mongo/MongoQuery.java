@@ -275,9 +275,6 @@ public class MongoQuery implements IQuery {
             List<Document> cities = (List<Document>) doc.get("cities");
             for(Document cityDoc : cities){
                 if (cityDoc.containsKey("name") && cityDoc.containsKey("location")) {
-                    if(cityDoc.getString("name").equals("Begūn")){
-                        System.out.println();
-                    }
                     locationDoc = (Document) cityDoc.get("location");
                     ArrayList<Double> coordinates = (ArrayList<Double>) locationDoc.get("coordinates");
                     tempCityDTO = new CityDTO(cityDoc.getString("name"), Double.parseDouble(coordinates.get(0)+""),

@@ -58,7 +58,7 @@ public class Neo4jQuery implements IQuery {
                 "WITH point({longitude: toFloat(c.longitude), latitude: toFloat(c.latitude)}) AS aPoint, point({latitude: "+ lat +", longitude: "+ lon +"}) AS bPoint, c " +
                 "WITH DISTINCT round(distance(aPoint, bPoint)) AS distance, c " +
                 "ORDER BY distance DESC " +
-                "WHERE distance < "+ distance +" " +
+                "WHERE distance < "+ distance*1000 +" " +
                 "MATCH (b:Book)-[:MENTIONS]->(c) " +
                 "MATCH (b)-[:AUTHORED_BY]->(a:Author) "+
                 "RETURN distance, c.name, b as book, collect(DISTINCT(c)) as cities, collect(DISTINCT(a)) as authors";

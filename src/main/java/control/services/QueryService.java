@@ -54,6 +54,7 @@ public class QueryService {
     public List<Book> getBooksByAuthorAndPlotCities(String authorName){
         List<BookDTO> bookDTOs = _query.getBooksByAuthor(authorName);
         List<Book> books = new ArrayList<Book>();
+        if (bookDTOs==null) return null;
         for (BookDTO bookDTO: bookDTOs) {
 
             books.add(bookDTOToBook(bookDTO));
