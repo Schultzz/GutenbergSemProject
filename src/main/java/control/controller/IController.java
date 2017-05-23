@@ -11,4 +11,5 @@ public interface IController {
     List<Book> getBookTitlesByCity(String city);
     String plotCitiesByBookTitle(String title);
     List<Book> getBooksByGeoLocation(double lon, double lat, double distance);
+    List<Book> getBooksByAuthorAndPlotCities(String author);
 }

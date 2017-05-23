@@ -51,6 +51,26 @@ public class QueryService {
         return books;
     }
 
+    public List<Book> getBooksByAuthorAndPlotCities(String authorName){
+        List<BookDTO> bookDTOs = _query.getBooksByAuthor(authorName);
+        List<Book> books = new ArrayList<Book>();
+        for (BookDTO bookDTO: bookDTOs) {
+
+            books.add(bookDTOToBook(bookDTO));
+        }
+        mapService.plotCitiesOnMap(getCitiesByBookDTOList(bookDTOs));
+        return books;
+    }
+
+    public List<CityDTO> getCitiesByBookDTOList(List<BookDTO> bookDTOs){
+        List<CityDTO> cityDTOs = new ArrayList<CityDTO>();
+
+        for(BookDTO bookDTO: bookDTOs){
+            cityDTOs.addAll(bookDTO.getCities());
+        }
+        return cityDTOs;
+    }
+
     public Book bookDTOToBook(BookDTO bookDTO){
 
         Book book = new Book(bookDTO.getTitle(), bookDTO.getAuthors());
