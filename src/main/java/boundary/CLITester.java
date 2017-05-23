@@ -4,12 +4,12 @@ import control.controller.Controller;
 import control.controller.IController;
 import data.IQuery;
 import data.mongo.MongoQuery;
+import data.neo4j.Neo4jQuery;
 
 /**
  * Created by Flashed on 20-05-2017.
  */
 public class CLITester {
-
     public static void main(String[] args) {
         IQuery query = null;
         try {
@@ -18,6 +18,9 @@ public class CLITester {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        query = new Neo4jQuery("bolt://localhost","neo4j","test");
+
 
         IController controller = new Controller(query);
         String city = "London";
