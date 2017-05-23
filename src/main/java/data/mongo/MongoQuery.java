@@ -30,33 +30,31 @@ public class MongoQuery implements IQuery {
 
 
 
-    public List<BookDTO> getBooksByAuthor(String author) {
+    public List<BookDTO> getBooksByAuthor(String author) { //Should be ok
         String collectionName = "books"; //Find place to store or inject this
         List<BookDTO> books = queryBooksByAuthor(author, collectionName);
 
         return books;
     }
 
-    public List<BookDTO> getBooksByCity(String city) {
+    public List<BookDTO> getBooksByCity(String city) { //OK
         String collectionName = "books"; //Find place to store or inject this
-        List<BookDTO> books = queryBooksByCity(city, collectionName);
+        List<BookDTO> books = NEWqueryBooksByCity(city, collectionName);
 
 
         return books;
     }
 
-    public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) {
+    public List<BookDTO> getBooksByGeoLocation(double lon, double lat, double distance) { //Ok
         List<BookDTO> books = null;
         String bookCollection = "books";
         String cityCollection = "cities";
-        List<String> cities = queryCitiesByGeoLocation(lon, lat, distance, cityCollection);
-        if(cities!=null){
-            books = queryBooksByCities(cities, bookCollection);
-        }
+        books = NEWqueryCitiesByGeoLocation(lon, lat, distance, bookCollection);
+
         return books;
     }
 
-    public List<CityDTO> getCitiesByBookTitle(String bookTitle) {
+    public List<CityDTO> getCitiesByBookTitle(String bookTitle) {//Ok
         String collectionName = "books";
         List<CityDTO> cities = queryCitiesByBookTitle(bookTitle, collectionName);
         return cities;
@@ -86,7 +84,7 @@ public class MongoQuery implements IQuery {
 
         BasicDBObject query = new BasicDBObject("location",
                 new BasicDBObject("$geoWithin",
-                        new BasicDBObject("$center", geoParams)));
+                        new BasicDBObject("$centerSphere", geoParams)));
 
         MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
         MongoCursor<Document> cursor = collection.find((Bson) query).iterator();
@@ -94,6 +92,34 @@ public class MongoQuery implements IQuery {
         List<String> cities = mongoCursorToCityStringList(cursor);
 
         return cities;
+    }
+
+    public List<BookDTO> NEWqueryCitiesByGeoLocation(double lon, double lat, double distance, String collectionName){
+
+        //Kilometers to miles
+        distance = distance * 0.62137;
+
+        BasicDBList geoCoord = new BasicDBList();
+        geoCoord.add(lon);
+        geoCoord.add(lat);
+
+        BasicDBList geoParams = new BasicDBList();
+        geoParams.add(geoCoord);
+        geoParams.add(distance/3963.2);
+
+        BasicDBObject queryInner = new BasicDBObject("location",
+                new BasicDBObject("$geoWithin",
+                        new BasicDBObject("$centerSphere", geoParams)));
+        //DBObject nameClause = new BasicDBObject("location", queryInner);
+        DBObject elemMatch = new BasicDBObject("$elemMatch", queryInner);
+        DBObject query = BasicDBObjectBuilder.start().add("cities", elemMatch).get();
+
+        MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
+        MongoCursor<Document> cursor = collection.find((Bson) query).iterator();
+
+        List<BookDTO> books = mongoCursorToBookDTOList(cursor);
+
+        return books;
     }
 
     public List<BookDTO> queryBooksByAuthor(String author, String collectionName){
@@ -112,6 +138,17 @@ public class MongoQuery implements IQuery {
         cityNames.add(city);
         DBObject inClause = new BasicDBObject("$in", cityNames);
         DBObject query = BasicDBObjectBuilder.start().add("cities", inClause).get();
+        MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
+        MongoCursor<Document> cursor = collection.find((Bson) query).iterator(); //This could be mocked
+
+        List<BookDTO> books = mongoCursorToBookDTOList(cursor);
+        return books;
+    }
+
+    public List<BookDTO> NEWqueryBooksByCity(String city, String collectionName){
+        DBObject nameClause = new BasicDBObject("name", city);
+        DBObject elemMatch = new BasicDBObject("$elemMatch", nameClause);
+        DBObject query = BasicDBObjectBuilder.start().add("cities", elemMatch).get();
         MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
         MongoCursor<Document> cursor = collection.find((Bson) query).iterator(); //This could be mocked
 
@@ -179,6 +216,8 @@ public class MongoQuery implements IQuery {
         return cityDTOs;
     }
 
+
+
     //UNTESTED, CRIME CRIME CRIME. Not sure how to create the mongocursor in the test.
     public List<BookDTO> mongoCursorToBookDTOList(MongoCursor<Document> cursor){
 
@@ -215,13 +254,26 @@ public class MongoQuery implements IQuery {
         if(doc.containsKey("bookId") && doc.containsKey("title") && doc.containsKey("authors")){
             String titleString;
             Object title = doc.get("title");
+            List<CityDTO> citiesDTO = new ArrayList<CityDTO>();
+            CityDTO tempCityDTO;
+            Document locationDoc;
             if(title.getClass() == Integer.class) titleString = title+"";
             else titleString = ((String) title);
             tempBook = new BookDTO(doc.getInteger("bookId"), titleString, "");
             List<String> authors = (List<String>) doc.get("authors");
             tempBook.setAuthors(authors);
-            List<String> cities = (List<String>) doc.get("cities");
-            tempBook.setCities(queryCitiesByList(cities, "cities")); //Cities is hardcoded..
+            List<Document> cities = (List<Document>) doc.get("cities");
+            for(Document cityDoc : cities){
+                if (cityDoc.containsKey("name") && cityDoc.containsKey("location")) {
+                    locationDoc = (Document) cityDoc.get("location");
+                    ArrayList<Double> coordinates = (ArrayList<Double>) locationDoc.get("coordinates");
+                    tempCityDTO = new CityDTO(cityDoc.getString("name"), coordinates.get(0), coordinates.get(1));
+                    citiesDTO.add(tempCityDTO);
+                }
+            }
+
+            tempBook.setCities(citiesDTO);
+
         }
         return tempBook;
     }
