@@ -5,6 +5,7 @@ import data.dto.BookDTO;
 import data.dto.CityDTO;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
@@ -78,7 +79,7 @@ public class Neo4jQueryTest {
         }
     }
 
-    @Ignore
+
     @Test
     public void testInvalidBooksByAuthorQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
@@ -86,7 +87,7 @@ public class Neo4jQueryTest {
         assertThat(DTOBooks.size(), is(0));
     }
 
-    @Ignore
+
     @Test
     public void testValidBooksByCityQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
