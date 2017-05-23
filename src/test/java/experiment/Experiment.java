@@ -2,6 +2,7 @@ package experiment;
 
 import control.controller.Controller;
 import data.IQuery;
+import data.mongo.MongoQuery;
 import data.mysql.MySqlConnector;
 import data.mysql.MySqlQuery;
 import org.junit.Ignore;
@@ -30,7 +31,7 @@ public class Experiment {
     public Experiment() {
         databases = new ArrayList<IQuery>();
         databases.add(new MySqlQuery(new MySqlConnector("jdbc:mysql://127.0.0.1/gutenberg", "tester", "pwd")));
-//        databases.add(new MongoQuery("", "", "", "", ""));
+        databases.add(new MongoQuery("mongodb://localhost", "27017", "user", "password", "project"));
 //        databases.add(new Neo4jQuery("", "", ""));
     }
 

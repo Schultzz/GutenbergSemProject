@@ -2,13 +2,8 @@ package boundary;
 
 import control.controller.Controller;
 import control.controller.IController;
-import control.entities.Book;
 import data.IQuery;
 import data.mongo.MongoQuery;
-import data.mysql.MySqlConnector;
-import data.mysql.MySqlQuery;
-
-import java.util.List;
 
 /**
  * Created by Flashed on 20-05-2017.
@@ -28,7 +23,8 @@ public class CLITester {
         String city = "London";
 
         long startTime = System.currentTimeMillis();
-        controller.getBookTitlesByCity(city);
+        //controller.plotCitiesByBookTitle("Belgians Under the German Eagle");
+        controller.getBooksByGeoLocation(-73.935242, 40.730610, 10);
         long stopTime = System.currentTimeMillis();
         System.out.printf("Database: [%s] - City: [%s] - Time: %d \n", "Mysql", city, stopTime - startTime);
         //List<Book> books = controller.getBookTitlesByCity("London");
