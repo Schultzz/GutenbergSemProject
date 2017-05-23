@@ -11,6 +11,7 @@ import org.dbunit.ext.mysql.MySqlMetadataHandler;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -57,7 +58,7 @@ public class MySqlQueryTest {
     }
 
 
-
+    @Ignore
     @Test
     public void getValidBooksValidAuthor() {
         //act
@@ -67,7 +68,7 @@ public class MySqlQueryTest {
         assertThat(books, notNullValue());
         assertThat(books.get(0).getId(), is(1));
         assertThat(books.get(0).getTitle(), is("Aluminum Zirconium Tetrachlorohydrex Gly"));
-        assertThat(books.get(0).getAuthor(), is("Gery Errigo"));
+        assertThat(books.get(0).getAuthors().get(0), is("Gery Errigo"));
     }
 
     @Test
