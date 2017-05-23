@@ -85,12 +85,14 @@ public class BookScannerTest {
         assertThat(book.getAuthors().size(), is(2));
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void setTitleAuthorFromMetaDataNoFile() throws IOException {
-
         String filename = path + "500001.txt";
         Book book = new Book();
-        bookScanner.setMetaDataOnBook(book, filename);
+        book = bookScanner.setMetaDataOnBook(book, filename);
+        if (book != null){
+            fail();
+        }
     }
 
 

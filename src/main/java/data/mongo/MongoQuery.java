@@ -23,14 +23,21 @@ public class MongoQuery implements IQuery {
     private MongoConnection mongoConnection;
     private String databaseName;
 
-    public MongoQuery(String connection, String port, String user, String password, String databaseName) throws ConnectException {
+    public MongoQuery(String connection, String port, String user, String password, String databaseName) {
         this.databaseName = databaseName;
-        this.mongoConnection = new MongoConnection(connection, port, user, password);
+        try {
+            this.mongoConnection = new MongoConnection(connection, port, user, password);
+        } catch (ConnectException e) {
+            e.printStackTrace();
+        }
     }
 
 
 
+
     public List<BookDTO> getBooksByAuthor(String author) { //Should be ok
+
+
         String collectionName = "books"; //Find place to store or inject this
         List<BookDTO> books = queryBooksByAuthor(author, collectionName);
 
@@ -60,7 +67,7 @@ public class MongoQuery implements IQuery {
         return cities;
     }
 
-    public List<BookDTO> queryBooksByCities(List<String> cities, String collectionName){
+    public List<BookDTO> queryBooksByCities(List<String> cities, String collectionName) {
         //This method is almost identical to the method that queries on a single city, but time is running out.
         BasicDBList cityNames = new BasicDBList();
         cityNames.addAll(cities);
@@ -73,7 +80,7 @@ public class MongoQuery implements IQuery {
         return books;
     }
 
-    public List<String> queryCitiesByGeoLocation(double lon, double lat, double distance, String collectionName){
+    public List<String> queryCitiesByGeoLocation(double lon, double lat, double distance, String collectionName) {
         BasicDBList geoCoord = new BasicDBList();
         geoCoord.add(lon);
         geoCoord.add(lat);
@@ -124,6 +131,7 @@ public class MongoQuery implements IQuery {
 
     public List<BookDTO> queryBooksByAuthor(String author, String collectionName){
 
+
         DBObject query = BasicDBObjectBuilder.start().add("authors", author).get();
         MongoCollection collection = mongoConnection.getWorkableMongoCollection(this.databaseName, collectionName);
         MongoCursor<Document> cursor = collection.find((Bson) query).iterator(); //This could be mocked
@@ -133,7 +141,7 @@ public class MongoQuery implements IQuery {
         return books;
     }
 
-    public List<BookDTO> queryBooksByCity(String city, String collectionName){
+    public List<BookDTO> queryBooksByCity(String city, String collectionName) {
         BasicDBList cityNames = new BasicDBList();
         cityNames.add(city);
         DBObject inClause = new BasicDBObject("$in", cityNames);
@@ -157,6 +165,7 @@ public class MongoQuery implements IQuery {
     }
 
     public List<CityDTO> queryCitiesByList(List<String> cities, String collectionName){
+
         List<CityDTO> cityDTOs = null;
         BasicDBList cityNames = new BasicDBList();
         cityNames.addAll(cities);
@@ -170,7 +179,7 @@ public class MongoQuery implements IQuery {
         return cityDTOs;
     }
 
-    public List<CityDTO> queryCitiesByBookTitle(String bookTitle, String collectionName){
+    public List<CityDTO> queryCitiesByBookTitle(String bookTitle, String collectionName) {
 
         List<BookDTO> booksDTO = null;
         List<CityDTO> citiesDTO = null;
@@ -179,19 +188,19 @@ public class MongoQuery implements IQuery {
         MongoCursor<Document> cursor = collection.find((Bson) query).iterator();
         booksDTO = mongoCursorToBookDTOList(cursor);
 
-        if(booksDTO.size()==1){
+        if (booksDTO.size() == 1) {
             citiesDTO = booksDTO.get(0).getCities();
         }
 
         return citiesDTO;
     }
 
-    public List<String> mongoCursorToCityStringList(MongoCursor<Document> cursor){
+    public List<String> mongoCursorToCityStringList(MongoCursor<Document> cursor) {
         List<String> cities = new ArrayList<String>();
 
-        while(cursor.hasNext()){
+        while (cursor.hasNext()) {
             Document doc = cursor.next();
-            if(doc.containsKey("name")){
+            if (doc.containsKey("name")) {
                 cities.add(doc.getString("name"));
             }
         }
@@ -200,18 +209,18 @@ public class MongoQuery implements IQuery {
     }
 
     //UNTESTED, CRIME CRIME CRIME. Not sure how to create the mongocursor in the test.
-    public List<CityDTO> mongoCursorToCityDTOList(MongoCursor<Document> cursor){
+    public List<CityDTO> mongoCursorToCityDTOList(MongoCursor<Document> cursor) {
         List<CityDTO> cityDTOs = new ArrayList<CityDTO>();
         CityDTO tempCity = null;
 
 
-        while(cursor.hasNext()){
+        while (cursor.hasNext()) {
             Document doc = cursor.next();
             tempCity = cityDocumentToCityDTO(doc);
-                if(tempCity!=null) {
-                    cityDTOs.add(tempCity);
-                }
+            if (tempCity != null) {
+                cityDTOs.add(tempCity);
             }
+        }
 
         return cityDTOs;
     }
@@ -219,7 +228,7 @@ public class MongoQuery implements IQuery {
 
 
     //UNTESTED, CRIME CRIME CRIME. Not sure how to create the mongocursor in the test.
-    public List<BookDTO> mongoCursorToBookDTOList(MongoCursor<Document> cursor){
+    public List<BookDTO> mongoCursorToBookDTOList(MongoCursor<Document> cursor) {
 
         BookDTO tempBook;
         List<BookDTO> books = new ArrayList<BookDTO>();
@@ -228,13 +237,14 @@ public class MongoQuery implements IQuery {
             doc = cursor.next();
 
             tempBook = bookDocumentToBookDTO(doc);
-            if(tempBook != null) {
+            if (tempBook != null) {
                 books.add(tempBook);
             }
 
         }
         return books;
     }
+
 
     public CityDTO cityDocumentToCityDTO(Document doc){
 
@@ -249,7 +259,7 @@ public class MongoQuery implements IQuery {
         return tempCity;
     }
 
-    public BookDTO bookDocumentToBookDTO(Document doc){
+    public BookDTO bookDocumentToBookDTO(Document doc) {
         BookDTO tempBook = null;
         if(doc.containsKey("bookId") && doc.containsKey("title") && doc.containsKey("authors")){
             String titleString;

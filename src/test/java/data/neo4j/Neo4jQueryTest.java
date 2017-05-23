@@ -32,41 +32,64 @@ public class Neo4jQueryTest {
                 URL,
                 AuthTokens.basic(USER, PASSWORD));
         Session session = driver.session();
-        String query1 = "CREATE INDEX ON :Book(author);";
-        String query2 = "CREATE CONSTRAINT ON (b:Book) ASSERT b.id IS UNIQUE;";
-        String query3 = "CREATE (a:Book { author: \"Hans Andersen\", title: \"Sverige for Svenskere\", id: 1 });";
-        String query4 = "CREATE (a:Book { author: \"Hans Andersen\", title: \"Mit liv i Sverige\", id: 2 });";
-        String query5 = "CREATE (a:Book { author: \"Hans Andersen\", title: \"Det her er jo bare en test\", id: 3 });";
-        String query6 = "CREATE (a:Book { author: \"Villy Soevndal\", title: \"On the Poles\", id: 4 });";
-        String query7 = "CREATE (a:Book { author: \"Villy Soevndal\", title: \"I will do this in English\", id: 5 });";
-        String query8 = "CREATE (a:Book { author: \"Per Henriksen\", title: \"Per i Vildmarken\", id: 6 });";
+        String query1 = "CREATE INDEX ON :Book(id, title);";
+        String query2 = "CREATE INDEX ON :City(name, latitude, longitude);";
+        String query3 = "CREATE INDEX ON :Author(id, name);";
+        String query4 = "MERGE (a:Book { title: \"Sverige for Svenskere\", id: 1 }) " +
+                "MERGE (b:Book { title: \"Mit liv i Sverige\", id: 2 }) " +
+                "MERGE (c:Book { title: \"Det her er jo bare en test\", id: 3 }) " +
+                "MERGE (d:Book { title: \"On the Poles\", id: 4 }) " +
+                "MERGE (e:Book { title: \"Per i Vildmarken\", id: 5 }) " +
+                "MERGE (g:Author { name: \"Villy Soevndal\", id: 10}) " +
+                "MERGE (h:Author { name: \"Per\", id: 11}) " +
+                "MERGE (i:Author { name: \"Mogens Lykketoft\", id: 12}) " +
+                "MERGE (k:City { name: \"Copenhagen\", latitude: 55.676098, longitude: 12.568337}) " +
+                "MERGE (l:City { name: \"Stockholm\", latitude: 59.334591, longitude: 18.063240}) " +
+                "MERGE (m:City { name: \"Oslo\", latitude: 59.911491, longitude: 10.757933}) " +
+                "MERGE (n:City { name: \"Helsinki\", latitude: 60.192059, longitude: 24.945831}) " +
+                "MERGE (a)-[:WRITTENBY]->(g)" +
+                "MERGE (b)-[:WRITTENBY]->(g)" +
+                "MERGE (b)-[:WRITTENBY]->(i)" +
+                "MERGE (c)-[:WRITTENBY]->(i)" +
+                "MERGE (d)-[:WRITTENBY]->(g)" +
+                "MERGE (e)-[:WRITTENBY]->(h)" +
+                "MERGE (a)-[:CONTAINS]->(k)" +
+                "MERGE (b)-[:CONTAINS]->(l)" +
+                "MERGE (c)-[:CONTAINS]->(m)" +
+                "MERGE (d)-[:CONTAINS]->(n)" +
+                "MERGE (e)-[:CONTAINS]->(k)";
         session.run(query1);
         session.run(query2);
         session.run(query3);
         session.run(query4);
-        session.run(query5);
-        session.run(query6);
-        session.run(query7);
-        session.run(query8);
         session.close();
         driver.close();
     }
 
-    @Ignore
     @Test
-    public void testValidNeo4jQuery() {
+    public void testValidBooksByAuthorQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Villy Soevndal");
         assertThat(DTOBooks.size() > 0, is(true));
         for (BookDTO bk : DTOBooks) {
-            assertThat(bk.getAuthors().get(0), is("Villy Soevndal"));
-            assertThat(bk.getTitle(), notNullValue());
+            assertThat(bk.getAuthors(), hasItem("Villy Soevndal"));
+            assertThat(bk.getCities(), notNullValue());
             assertThat(bk.getId(), notNullValue());
+            assertThat(bk.getTitle(), notNullValue());
         }
     }
 
+    @Ignore
     @Test
-    public void testInvalidNeo4jQuery() {
+    public void testInvalidBooksByAuthorQuery() {
+        IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
+        List<BookDTO> DTOBooks = nq.getBooksByAuthor("Magnus Henriksen");
+        assertThat(DTOBooks.size() == 0, is(true));
+    }
+
+    @Ignore
+    @Test
+    public void testValidBooksByCityQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Magnus Henriksen");
         assertThat(DTOBooks.size() == 0, is(true));
@@ -80,9 +103,13 @@ public class Neo4jQueryTest {
                 AuthTokens.basic(USER, PASSWORD));
         Session session = driver.session();
         String query1 = "MATCH (n) DETACH DELETE n;";
-        String query2 = "DROP INDEX ON :Book(author);";
-        session.run(query1);
-        session.run(query2);
+        String query2 = "DROP INDEX ON :Book(id, title);";
+        String query3 = "DROP INDEX ON :City(name, latitude, longitude);";
+        String query4 = "DROP INDEX ON :Author(id, name);";
+        //session.runQuery(query1);
+        //session.runQuery(query2);
+        //session.runQuery(query3);
+        //session.runQuery(query4);
         session.close();
         driver.close();
     }

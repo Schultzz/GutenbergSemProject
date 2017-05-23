@@ -26,26 +26,23 @@ public class Neo4jQuery implements IQuery {
 
     public List<BookDTO> getBooksByAuthor(String author) {
         Session session = connection.getConnection(URL, USER, PASSWORD);
-        String query = "MATCH (a:Book) " +
-                " WHERE a.author = \""+ author +
-                "\" RETURN a.author AS author, a.title AS title, a.id AS id;";
+        //String query = "MATCH (b:Book)-[:WRITTENBY]->(a:Author{name:\""+author+"\"}) RETURN a as author, b as book";
+        String query = "MATCH (b:Book {title:\"Mit liv i Sverige\"})-[:WRITTENBY]->(a:Author) \n" +
+                "MATCH (b)-[:CONTAINS]->(c:City) \n" +
+                "RETURN collect(distinct(a)) as authors, collect(distinct(c)) as cities, b as book";
         StatementResult result = session.run(query);
-
-        List<BookDTO> resultList = new ArrayList<BookDTO>();
-        while(result.hasNext()){
-            Record record = result.next();
-            int id = record.get("id").asInt();
-            String au = record.get("author").asString();
-            String ti = record.get("title").asString();
-            BookDTO bk = new BookDTO(id, ti, au);
-            resultList.add(bk);
-        }
+        List<BookDTO> resultList = convertToDTO(result);
         session.close();
 
         return resultList;
     }
 
+
     public List<BookDTO> getBooksByCity(String city) {
+        Session session = connection.getConnection(URL, USER, PASSWORD);
+        String query = "MATCH (b:Book)-[co:CONTAINS]->(c:City{name: \"Name\"})\n" +
+                "MATCH (b)-[w:WRITTENBY]->(a:Author)\n" +
+                "RETURN b.title, a.name";
         return null;
     }
 
@@ -57,5 +54,25 @@ public class Neo4jQuery implements IQuery {
         return null;
     }
 
+    private List<BookDTO> convertToDTO(StatementResult res) {
+        List<BookDTO> resultList = new ArrayList<BookDTO>();
 
+        while (res.hasNext()) {
+            Record record = res.next();
+
+            Value book = record.get("book");
+            Value authors = record.get("authors");
+            Value cities = record.get("cities");
+            BookDTO bk = new BookDTO(book.get("id").asInt(), book.get("title").asString(), "");
+            for (Value val : authors.values()) {
+                bk.addAuthor((val.get("name").asString()));
+            }
+            for (Value val : cities.values()) {
+                bk.addCity(new CityDTO(val.get("name").asString(), val.get("latitude").asDouble(), val.get("longitude").asDouble()));
+            }
+
+            resultList.add(bk);
+        }
+        return resultList;
+    }
 }

@@ -74,6 +74,8 @@ public class MySqlQueryIT {
 
         //assert
         assertThat(books.size(), is(4));
+        assertThat(books.get(0).getId(), is(51653));
+        assertThat(books.get(0).getTitle(), is("Wenonah's Stories for Children"));
     }
 
     @Test
@@ -92,6 +94,8 @@ public class MySqlQueryIT {
 
         //assert
         assertThat(books.size(), is(1));
+        assertThat(books.get(0).getId(), is(0));
+        assertThat(books.get(0).getTitle(), is("Wenonah's Stories for Children"));
     }
 
     @Test
@@ -106,6 +110,8 @@ public class MySqlQueryIT {
         List<BookDTO> books = query.getBooksByGeoLocation(125.21972, -8.99167, 10);
         //assert
         assertThat(books.size(), is(1));
+        assertThat(books.get(0).getTitle(), is("Wenonah's Stories for Children"));
+        assertThat(books.get(0).getCities().get(0).getCityName(), is("Maliana"));
     }
 
     @Ignore
@@ -119,6 +125,7 @@ public class MySqlQueryIT {
         List<CityDTO> cities = query.getCitiesByBookTitle("Pick a Crime");
         //assert
         assertThat(cities.size(), is(1));
+        assertThat(cities.get(0).getCityName(), is("Malilipot"));
     }
 
     @Test

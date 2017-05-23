@@ -20,6 +20,12 @@ public class BookDTO {
         this.cities = new ArrayList<CityDTO>();
     }
 
+    public void addAuthor(String author) {
+        if (!authors.contains(author)) {
+            authors.add(author);
+        }
+    }
+
     public List<CityDTO> getCities() {
         return cities;
     }

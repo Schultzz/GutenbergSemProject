@@ -25,10 +25,24 @@ public class CLITester {
         }
 
         IController controller = new Controller(query);
-        System.out.println("start");
-        List<Book> books = controller.getBookTitlesByCity("London");
-        System.out.println(books.size());
+        String city = "London";
+
+        long startTime = System.currentTimeMillis();
+        controller.getBookTitlesByCity(city);
+        long stopTime = System.currentTimeMillis();
+        System.out.printf("Database: [%s] - City: [%s] - Time: %d \n", "Mysql", city, stopTime - startTime);
+        //List<Book> books = controller.getBookTitlesByCity("London");
         //System.out.println(controller.plotCitiesByBookTitle("Belgians Under the German Eagle"));
+        //System.out.println(controller.getBookTitlesByCity("London").size());
+        //System.out.println(controller.getBooksByGeoLocation(-73.935242, 40.730610, 10).size());
+
+//        File htmlFile = new File(controller.plotCitiesByBookTitle("Belgians Under the German Eagle"));
+//        try {
+//            Desktop.getDesktop().browse(htmlFile.toURI());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
         //List<Book> books2 = controller.getBooksByGeoLocation(13.404954, 52.520008, 1);
     }
 
