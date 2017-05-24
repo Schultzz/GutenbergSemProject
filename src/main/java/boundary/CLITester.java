@@ -12,7 +12,9 @@ import data.neo4j.Neo4jQuery;
 public class CLITester {
     public static void main(String[] args) {
         IQuery query = null;
+        IQuery neoQuery = null;
         try {
+            neoQuery = new Neo4jQuery("bolt://localhost", "neo4j", "test");
             query = new MongoQuery("mongodb://localhost", "27017", "user", "password", "project");
             //query = new MySqlQuery(new MySqlConnector("jdbc:mysql://127.0.0.1/gutenberg", "tester", "pwd"));
         } catch (Exception e) {
@@ -22,7 +24,8 @@ public class CLITester {
         query = new Neo4jQuery("bolt://localhost","neo4j","test");
 
 
-        IController controller = new Controller(query);
+        //IController controller = new Controller(query);
+        IController controller = new Controller(neoQuery);
         String city = "London";
 
         long startTime = System.currentTimeMillis();
