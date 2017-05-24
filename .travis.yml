@@ -17,7 +17,7 @@ before_install:
   - sudo neo4j-community-3.2.0/bin/neo4j restart
   - sudo neo4j-community-3.2.0/bin/neo4j-admin set-initial-password test
   - mysql -e 'CREATE DATABASE gutenberg_test;'
-  - mysql -u root --password='' gutenberg_test < scripts/setup.sql
+  - mysql -u root --password='' gutenberg_test < vm/scripts/test_setup.sql
   - mysql -u root --password='' -e "create user 'tester'@'127.0.0.1' identified by 'pwd'; grant all privileges on *.* to 'tester'@'127.0.0.1' with grant option; flush privileges;"
   - mongo testDB --eval 'db.addUser("user", "password");'
 script: mvn clean verify

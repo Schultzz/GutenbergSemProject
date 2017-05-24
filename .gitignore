@@ -16,5 +16,12 @@ target/
 vm/*.log
 vm/.vagrant/
 
-# Book files
-src/main/resources/bookscanner/*
+vm/mysqlsetup/*
+vm/mongo/*
+
+
+# Bookscanner
+src/main/resources/bookscanner/books/
+src/main/resources/bookscanner/metadata/
+src/main/resources/bookscanner/csv/
+resources/*

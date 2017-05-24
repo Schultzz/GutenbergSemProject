@@ -151,7 +151,7 @@ Vagrant.configure("2") do |config|
 
     mysql -u root -ppwd -e "create user 'root'@'10.0.2.2' identified by 'pwd'; grant all privileges on *.* to 'root'@'10.0.2.2' with grant option; flush privileges;"
     mysql -u root -ppwd -e "create user 'tester'@'10.0.2.2' identified by 'pwd'; grant all privileges on *.* to 'tester'@'10.0.2.2' with grant option; flush privileges;"
-    mysql -u root -ppwd -e 'CREATE DATABASE gutenberg_test; USE gutenberg_test; create table books (id INT, title VARCHAR(50), author VARCHAR(50));'
+    # mysql -u root -ppwd -e 'CREATE DATABASE gutenberg_test; USE gutenberg_test; create table books (id INT, title VARCHAR(50), author VARCHAR(50));'
     sudo /etc/init.d/mysql restart
 
     # sudo service mysql restart

@@ -35,4 +35,8 @@ public class Controller implements IController {
     public List<Book> getBooksByGeoLocation(double lon, double lat, double distance) {
         return queryService.getBooksByGeoLocation(lon,lat,distance);
     }
+
+    public List<Book> getBooksByAuthorAndPlotCities(String author) {
+        return queryService.getBooksByAuthorAndPlotCities(author);
+    }
 }

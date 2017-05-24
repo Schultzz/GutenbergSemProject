@@ -5,6 +5,7 @@ import data.dto.BookDTO;
 import data.dto.CityDTO;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
@@ -78,12 +79,14 @@ public class Neo4jQueryTest {
         }
     }
 
+
     @Test
     public void testInvalidBooksByAuthorQuery() {
         IQuery nq = new Neo4jQuery(URL, USER, PASSWORD);
         List<BookDTO> DTOBooks = nq.getBooksByAuthor("Magnus Henriksen");
         assertThat(DTOBooks.size(), is(0));
     }
+
 
     @Test
     public void testValidBooksByCityQuery() {
