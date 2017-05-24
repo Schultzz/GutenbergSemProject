@@ -2,6 +2,8 @@ package boundary;
 
 import control.controller.Controller;
 import control.controller.IController;
+import control.services.MapService;
+import control.services.QueryService;
 import data.IQuery;
 import data.mongo.MongoQuery;
 import data.neo4j.Neo4jQuery;
@@ -21,11 +23,10 @@ public class CLITester {
             e.printStackTrace();
         }
 
-        query = new Neo4jQuery("bolt://localhost","neo4j","test");
+        query = new Neo4jQuery("bolt://localhost", "neo4j", "test");
 
 
-        //IController controller = new Controller(query);
-        IController controller = new Controller(neoQuery);
+        IController controller = new Controller(new QueryService(query), new MapService());
         String city = "London";
 
         long startTime = System.currentTimeMillis();

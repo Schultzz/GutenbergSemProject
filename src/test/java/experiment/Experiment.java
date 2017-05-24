@@ -1,6 +1,8 @@
 package experiment;
 
 import control.controller.Controller;
+import control.services.MapService;
+import control.services.QueryService;
 import data.IQuery;
 import data.mongo.MongoQuery;
 import data.mysql.MySqlConnector;
@@ -39,7 +41,7 @@ public class Experiment {
     public void getBooksByAuthorAndPlotCities(){
         for (IQuery database : databases) {
             double avg = 0;
-            controller = new Controller(database);
+            controller = new Controller(new QueryService(database), new MapService());
             for (String author : authors) {
                 long startTime = System.currentTimeMillis();
                 controller.getBooksByAuthorAndPlotCities(author);
@@ -54,8 +56,8 @@ public class Experiment {
     @Test
     public void getBookTitlesByCityName() {
         for (IQuery database : databases) {
+            controller = new Controller(new QueryService(database), new MapService());
             double avg = 0;
-            controller = new Controller(database);
             for (String city : cities) {
                 long startTime = System.currentTimeMillis();
                 controller.getBookTitlesByCity(city);
@@ -71,7 +73,7 @@ public class Experiment {
     public void getCitiesByBookTitle() {
         for (IQuery database : databases) {
         double avg = 0;
-            controller = new Controller(database);
+            controller = new Controller(new QueryService(database), new MapService());
             for (String title : books) {
                 long startTime = System.currentTimeMillis();
                 controller.plotCitiesByBookTitle(title);
@@ -86,8 +88,8 @@ public class Experiment {
     @Test
     public void getCitiesByGeolocation() {
         for (IQuery database : databases) {
+            controller = new Controller(new QueryService(database), new MapService());
         double avg = 0;
-            controller = new Controller(database);
             for (Geo geo : locations) {
                 long startTime = System.currentTimeMillis();
                 controller.getBooksByGeoLocation(geo.lon, geo.lat, geo.distance);

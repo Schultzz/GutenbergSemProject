@@ -33,8 +33,6 @@ public class MySqlQueryIT {
     private static MySqlConnector mySqlConnector;
     private MySqlQuery query;
     private String pathSetup = "src/test/resources/mysql/setup/";
-    private String pathResult = "src/test/resources/mysql/result/";
-
 
     @BeforeClass
     public static void setUp() throws Exception {
