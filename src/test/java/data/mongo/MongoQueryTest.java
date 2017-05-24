@@ -56,17 +56,19 @@ public class MongoQueryTest {
         _mongoClient.getDatabase(databaseName).createCollection(cityCollectionName);
 
         //Test setup
+        //Cities
+        Document copenhagenDoc = new Document("name", "Copenhagen").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(12.56553, 55.67594)));
+        Document londonDoc = new Document("name", "London").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(-0.12574, 51.50853)));
+        Document parisDoc =new Document("name", "Paris").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(2.294694, 48.858093)));
+        Document dublinDoc =new Document("name", "Dublin").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(-6.266155, 53.350140)));
+        Document moscowDoc =new Document("name", "Moscow").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(37.618423, 55.751244)));
         //Books
         List<Document> documents = new ArrayList<Document>(); //Id's could be ints.
-        documents.add(new Document("bookId", 1000).append("title", "Best book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList("London", "Copenhagen")));
-        documents.add(new Document("bookId", 1010).append("title", "Good book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList("London", "Paris")));
-        documents.add(new Document("bookId", 1020).append("title", "Another book").append("authors", Arrays.asList("Stephen King")).append("cities", Arrays.asList("Dublin", "Moscow")));
+        documents.add(new Document("bookId", 1000).append("title", "Best book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList(londonDoc, copenhagenDoc)));
+        documents.add(new Document("bookId", 1010).append("title", "Good book").append("authors", Arrays.asList("Ernest Hemingway")).append("cities", Arrays.asList(londonDoc, parisDoc)));
+        documents.add(new Document("bookId", 1020).append("title", "Another book").append("authors", Arrays.asList("Stephen King")).append("cities", Arrays.asList(dublinDoc, moscowDoc)));
         _mongoClient.getDatabase(databaseName).getCollection(bookCollectionName).insertMany(documents);
-        //Cities
-        documents = new ArrayList<Document>();
-        documents.add(new Document("name", "Copenhagen").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(12.56553, 55.67594))));
-        documents.add(new Document("name", "London").append("location", new Document("type", "Point").append("coordinates", Arrays.asList(-0.12574, 51.50853))));
-        _mongoClient.getDatabase(databaseName).getCollection(cityCollectionName).insertMany(documents);
+
 
         mongoQuery = new MongoQuery(connectionString, port+"", user, password, databaseName);
     }
@@ -87,8 +89,13 @@ public class MongoQueryTest {
         doc.put("authors", Arrays.asList(author));
         String title = "Mechanics 101";
         doc.put("title", title);
-        List cities = Arrays.asList("London", "Copenhagen");
-        doc.put("cities", cities);
+        ArrayList<Double> coords = new ArrayList<Double>();
+        coords.add(12.56553);
+        coords.add(55.67594);
+
+        List cities = Arrays.asList(new Document("name", "London").append("location", new Document("type", "Point").append("coordinates", coords)),
+                                    new Document("name", "Copenhagen").append("location", new Document("type", "Point").append("coordinates", coords)));
+        doc.append("cities", cities);
 
 
         BookDTO book = mongoQuery.bookDocumentToBookDTO(doc);
@@ -144,13 +151,6 @@ public class MongoQueryTest {
     }
 
     @Test
-    public void queryCitiesByList(){
-        List<String> cities = Arrays.asList("London", "Copenhagen");
-        List<CityDTO> cityDTOs = mongoQuery.queryCitiesByList(cities, cityCollectionName);
-        assertThat(cityDTOs, hasSize(cities.size()));
-    }
-
-    @Test
     public void getCitiesByBookTitleTest(){
         String bookTitle = "Best book";
         List<CityDTO> cities = mongoQuery.getCitiesByBookTitle(bookTitle);
@@ -165,17 +165,17 @@ public class MongoQueryTest {
     }
 
     @Test
-    public void queryCitiesByGeoLocation(){
+    public void queryBooksByGeolocationTest(){
         double lng = 12.56569;
         double lat = 55.67572;
-        double distance = 5;
-        List<String> cityStrings = mongoQuery.queryCitiesByGeoLocation(lng, lat, distance, cityCollectionName);
-        assertThat(cityStrings, hasSize(1));
-        assertThat(cityStrings.get(0), is("Copenhagen"));
+        double distance = 1;
+        List<BookDTO> bookDTOs = mongoQuery.queryBooksByGeolocation(lng, lat, distance, bookCollectionName);
+        assertThat(bookDTOs, hasSize(1));
     }
 
+
     @Test
-    public void getBooksByGeoLocation(){
+    public void getBooksByGeoLocationTest(){
         double lng = 12.56569;
         double lat = 55.67572;
         double distance = 5;
