@@ -1,4 +1,4 @@
-# GutenbergSemProject
+# Gutenberg Semester Project
 ## Morten Schultz Laursen, Søren Tromborg Larsen og Uffe Nedergaard
 ## Experiments
 
