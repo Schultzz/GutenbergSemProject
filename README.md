@@ -1,5 +1,5 @@
 # GutenbergSemProject
-
+## Morten Schultz Laursen, Søren Tromborg Larsen og Uffe Nedergaard
 ## Experiments
 
 Query | Neo4j | MySql | Mongo
