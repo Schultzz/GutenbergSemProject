@@ -1,4 +1,4 @@
-USE gutenberg;
+USE gutenberg_test;
 
 DROP TABLE IF EXISTS author_book_join;
 DROP TABLE IF EXISTS location_book_join;

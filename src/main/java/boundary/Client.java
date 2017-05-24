@@ -2,6 +2,8 @@ package boundary;
 
 import control.controller.Controller;
 import control.controller.IController;
+import control.services.MapService;
+import control.services.QueryService;
 import data.mongo.MongoQuery;
 import data.mysql.MySqlConnector;
 import data.mysql.MySqlQuery;
@@ -77,13 +79,13 @@ public class Client {
                 System.out.print("Select a query:");
                 int query = scanner.nextInt();
                 if (database.equals("mysql")) {
-                    Client client = new Client(new Controller(new MySqlQuery(new MySqlConnector(url, username, password))));
+                    Client client = new Client(new Controller(new QueryService(new MySqlQuery(new MySqlConnector(url, username, password))), new MapService()));
                     client.runQuery(query);
                 } else if (database.equals("mongo")) {
-                    Client client = new Client(new Controller(new MongoQuery(url, "", username, password, "")));
+                    Client client = new Client(new Controller(new QueryService(new MongoQuery(url, "", username, password, "")), new MapService()));
                     client.runQuery(query);
                 } else if (database.equals("neo4j")) {
-                    Client client = new Client(new Controller(new Neo4jQuery(url, username, password)));
+                    Client client = new Client(new Controller(new QueryService(new Neo4jQuery(url, username, password)), new MapService()));
                     client.runQuery(query);
                 }
 

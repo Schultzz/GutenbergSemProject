@@ -90,7 +90,6 @@ public class BookScanner {
         } catch (SAXException e) {
             e.printStackTrace();
         }catch (FileNotFoundException ex){
-            System.out.println("FileNotFound on " + filename);
             return null;
         }
         return book;
