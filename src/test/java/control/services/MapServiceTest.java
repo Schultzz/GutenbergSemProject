@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by Soren on 17-05-2017.
  */
-public class MapServiceTests {
+public class MapServiceTest {
 
     private static List<CityDTO> cities;
 
@@ -45,7 +45,7 @@ public class MapServiceTests {
         String cityArrayString = "[55.676098, 12.568337, 'Copenhagen'],[52.518623, 13.376198, 'Berlin'],[52.374355, 4.89796, 'Amsterdam']";
         MapService mapService = new MapService();
         String html = mapService.addPointsToHTML(cityArrayString);
-        mapService.writeHtmlToFile("maps/mapHtmltest.html", html);
+        //mapService.writeHtmlToFile("maps/mapHtmltest.html", html);
     }
 
 }

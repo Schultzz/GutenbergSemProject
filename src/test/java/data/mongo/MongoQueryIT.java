@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
  * Created by Flashed on 07-05-2017.
  */
 
-public class MongoQueryTest {
+public class MongoQueryIT {
 
     private static MongoQuery mongoQuery;
     private static int port = 27017;
