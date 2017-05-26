@@ -112,11 +112,9 @@ public class BookScanner {
     public String getBookAsString(String fileName) throws FileNotFoundException {
 
         String bookAsString = "";
-        try {
+
             bookAsString = new Scanner(new File(fileName)).useDelimiter("\\Z").next();
-        }catch (NoSuchElementException e){
-            System.out.println("No such elem ex on " + fileName);
-        }
+
         return bookAsString;
     }
 
