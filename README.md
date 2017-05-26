@@ -2,7 +2,7 @@
 ## Morten Schultz Laursen, Søren Tromborg Larsen og Uffe Nedergaard
 ## Test reflections:
 
-![picture alt](https://github.com/Schultzz/GutenbergSemProject/blob/master/resources/Reflektion%20over%20l%C3%A6ringsm%C3%A5l%20i%20Test.pdf)
+[PDF - Reflections](https://github.com/Schultzz/GutenbergSemProject/blob/master/resources/Reflektion%20over%20l%C3%A6ringsm%C3%A5l%20i%20Test.pdf)
 
 ## Experiments
 
