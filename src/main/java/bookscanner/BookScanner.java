@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Created by Jonathan on 15.05.17.
  */
 public class BookScanner {
-
+    //Exam
     private ArrayList<Author> authors;
     private ArrayList<Book> books;
     private Map<String, Author> authorMap;
